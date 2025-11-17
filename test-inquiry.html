@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Inquiry Storage</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>LocalStorage Inquiry Debugger</h1>
+    
+    <h2>Current Inquiries:</h2>
+    <pre id="inquiries">Loading...</pre>
+    
+    <button onclick="addTestInquiry()">Add Test Inquiry</button>
+    <button onclick="clearInquiries()">Clear All Inquiries</button>
+    <button onclick="loadInquiries()">Refresh</button>
+    
+    <script>
+        function loadInquiries() {
+            const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+            document.getElementById('inquiries').textContent = 
+                inquiries.length === 0 ? 
+                'No inquiries found' : 
+                JSON.stringify(inquiries, null, 2);
+            console.log('Inquiries:', inquiries);
+        }
+        
+        function addTestInquiry() {
+            let inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+            inquiries.push({
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@example.com',
+                phone: '555-1234',
+                specialRequests: 'Test inquiry',
+                items: [{name: 'Test Item', price: 10}],
+                total: 10,
+                submittedAt: new Date().toISOString()
+            });
+            localStorage.setItem('inquiries', JSON.stringify(inquiries));
+            loadInquiries();
+            alert('Test inquiry added!');
+        }
+        
+        function clearInquiries() {
+            if (confirm('Clear all inquiries?')) {
+                localStorage.removeItem('inquiries');
+                loadInquiries();
+            }
+        }
+        
+        loadInquiries();
+    </script>
+</body>
+</html>

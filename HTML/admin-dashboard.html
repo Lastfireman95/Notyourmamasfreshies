@@ -424,8 +424,11 @@
         document.getElementById('total-inquiries').textContent = inquiries.length;
         
         if (inquiries.length === 0) {
-          document.getElementById('inquiries-container').innerHTML = '<p class="empty-state">No inquiries yet.</p>';
+          document.getElementById('pending-inquiries-container').innerHTML = '<p class="empty-state">No pending inquiries.</p>';
+          document.getElementById('filled-inquiries-container').innerHTML = '<p class="empty-state">No filled orders yet.</p>';
           document.getElementById('table-body').innerHTML = '';
+          document.getElementById('total-revenue').textContent = '$0.00';
+          document.getElementById('avg-order-value').textContent = '$0.00';
           return;
         }
 
@@ -440,38 +443,11 @@
         document.getElementById('total-revenue').textContent = '$' + totalRevenue.toFixed(2);
         document.getElementById('avg-order-value').textContent = '$' + avgOrderValue.toFixed(2);
 
-        // Display recent inquiries
-        const recentInquiries = inquiries.slice(-5).reverse();
-        let recentHTML = '';
-        recentInquiries.forEach(inquiry => {
-          const date = new Date(inquiry.submittedAt).toLocaleDateString();
-          const itemsCount = inquiry.items.length;
-          const productsHTML = inquiry.items.map(item => {
-            let designPart = '';
-            if (item.cardstock && item.cardstock.image) {
-              const img = item.cardstock.image.src || '';
-              const desc = item.cardstock.image.desc || '';
-              designPart = `<div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.25rem;"><img src="${img}" alt="design" style="width:48px;height:48px;object-fit:cover;border-radius:4px;" /><div style="font-size:0.85rem;color:#666;">${desc}</div></div>`;
-            }
-            return `<div>• ${item.name} (${item.scent}) - $${item.price.toFixed(2)}${designPart}</div>`;
-          }).join('');
-
-          recentHTML += `
-            <div class="inquiry-item">
-              <h3>${inquiry.firstName} ${inquiry.lastName}</h3>
-              <div class="inquiry-detail"><strong>Email:</strong> ${inquiry.email}</div>
-              <div class="inquiry-detail"><strong>Phone:</strong> ${inquiry.phone}</div>
-              <div class="inquiry-detail"><strong>Order Total:</strong> $${inquiry.total.toFixed(2)}</div>
-              <div class="inquiry-detail"><strong>Items:</strong> ${itemsCount}</div>
-              <div class="inquiry-detail"><strong>Date:</strong> ${date}</div>
-              ${inquiry.specialRequests ? `<div class="inquiry-detail"><strong>Special Requests:</strong> ${inquiry.specialRequests}</div>` : ''}
-              <div class="inquiry-items">
-                <strong>Products:</strong>
-                ${productsHTML}
-              </div>
-            </div>
-          `;
-        });
+        // Separate inquiries by status
+        const pendingInquiries = inquiries.filter(inquiry => !inquiry.filled);
+        const filledInquiries = inquiries.filter(inquiry => inquiry.filled);
+        
+        // Display pending inquiries
         displayInquiriesList(pendingInquiries, 'pending-inquiries-container', false);
         
         // Display filled inquiries  
@@ -653,7 +629,8 @@
             document.getElementById('total-inquiries').textContent = '0';
             document.getElementById('total-revenue').textContent = '$0.00';
             document.getElementById('avg-order-value').textContent = '$0.00';
-            document.getElementById('inquiries-container').innerHTML = '<p class="empty-state">No inquiries yet.</p>';
+            document.getElementById('pending-inquiries-container').innerHTML = '<p class="empty-state">No pending inquiries.</p>';
+            document.getElementById('filled-inquiries-container').innerHTML = '<p class="empty-state">No filled orders yet.</p>';
             document.getElementById('table-body').innerHTML = '';
             alert('All statistics have been reset.');
           }
