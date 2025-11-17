@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Not Your Mama's Freshies — Shopping Cart</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: sandybrown;
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 1rem;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        color: black;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .info-box {
+        background-color: #e8f4f8;
+        border-left: 4px solid #27ae60;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        border-radius: 4px;
+      }
+      .info-box p {
+        margin: 0.5rem 0;
+        color: #333;
+      }
+      .cart-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .cart-section h2 {
+        color: #333;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .cart-items {
+        margin-bottom: 1.5rem;
+      }
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #eee;
+      }
+      .cart-item:last-child {
+        border-bottom: none;
+      }
+      .item-details {
+        flex-grow: 1;
+      }
+      .item-name {
+        font-weight: bold;
+        color: #333;
+      }
+      .item-scent {
+        font-size: 0.9rem;
+        color: #666;
+      }
+      .item-price {
+        font-weight: bold;
+        color: #d9534f;
+        text-align: right;
+        min-width: 80px;
+      }
+      .remove-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 1rem;
+        font-size: 0.9rem;
+      }
+      .remove-btn:hover {
+        background: #c0392b;
+      }
+      .empty-cart {
+        text-align: center;
+        padding: 2rem;
+        color: #999;
+      }
+      .cart-total {
+        text-align: right;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding-top: 1rem;
+        border-top: 2px solid #ddd;
+        color: #d9534f;
+      }
+      .form-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+        color: #333;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-family: Arial, sans-serif;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: sandybrown;
+        box-shadow: 0 0 4px rgba(210,105,30,0.3);
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .submit-btn {
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .submit-btn:hover {
+        background-color: #229954;
+      }
+      .submit-btn:active {
+        background-color: #1e8449;
+      }
+      .submit-btn:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+      }
+      .payment-info {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 4px;
+      }
+      .payment-info strong {
+        color: #856404;
+      }
+      .payment-info p {
+        margin: 0.5rem 0;
+        color: #856404;
+      }
+      @media (max-width: 600px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .cart-item {
+          flex-wrap: wrap;
+        }
+        .remove-btn {
+          margin-left: 0;
+          margin-top: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="Sales-page.html" class="back-link">← Back to Shopping</a>
+
+      <h1>Shopping Cart</h1>
+
+      <div class="info-box">
+        <p><strong>📍 Local Pickup Only:</strong> All orders are available for local pickup in Lawrence County, TN</p>
+        <p><strong>Payment:</strong> Full payment will be made upon product pickup. Cash, card, or mobile payment accepted.</p>
+      </div>
+
+      <!-- Cart Items Section -->
+      <div class="cart-section">
+        <h2>Your Items</h2>
+        <div id="cart-items-container" class="cart-items">
+          <div class="empty-cart">Your cart is empty. <a href="Sales-page.html">Continue shopping</a></div>
+        </div>
+        <div class="cart-total">
+          Total: $<span id="cart-total">0.00</span>
+        </div>
+      </div>
+
+      <!-- Customer Information Section -->
+      <div class="form-section" id="customer-form-section" style="display: none;">
+        <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 0.5rem; margin-bottom: 1rem;">Customer Information</h2>
+        
+        <div class="payment-info">
+          <p><strong>💳 Payment Notice</strong></p>
+          <p>Payment will be collected upon product pickup. You will be contacted within 3 business days to schedule your pickup time and location.</p>
+        </div>
+
+        <form id="inquiry-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name *</label>
+              <input type="text" id="first-name" name="first-name" required />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name *</label>
+              <input type="text" id="last-name" name="last-name" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Street Address *</label>
+            <input type="text" id="address" name="address" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input type="text" id="city" name="city" value="Lawrenceburg" required />
+            </div>
+            <div class="form-group">
+              <label for="zip">ZIP Code *</label>
+              <input type="text" id="zip" name="zip" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="special-requests">Special Requests or Notes</label>
+            <textarea id="special-requests" name="special-requests" placeholder="Any special requests or preferences..."></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Submit Inquiry</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Initialize cart from localStorage
+      function initCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        displayCart(cart);
+      }
+
+      function displayCart(cart) {
+        const container = document.getElementById('cart-items-container');
+        const formSection = document.getElementById('customer-form-section');
+
+        if (cart.length === 0) {
+          container.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="Sales-page.html">Continue shopping</a></div>';
+          formSection.style.display = 'none';
+          document.getElementById('cart-total').textContent = '0.00';
+          return;
+        }
+
+        formSection.style.display = 'block';
+
+        let html = '';
+        let total = 0;
+
+        cart.forEach((item, index) => {
+          // Cardstock design display
+          let designHTML = '';
+          if (item.cardstock && item.cardstock.image) {
+            const img = item.cardstock.image.src || '';
+            const desc = item.cardstock.image.desc || '';
+            designHTML = `\n                  <div style="display:flex;gap:0.75rem;align-items:center;margin-top:0.5rem;">\n                    <img src="${img}" alt="design" style="width:64px;height:64px;object-fit:cover;border-radius:4px;" />\n                    <div style="font-size:0.9rem;color:#666;">${desc}</div>\n                  </div>`;
+          }
+
+          html += `
+            <div class="cart-item">
+              <div class="item-details">
+                <div class="item-name">${item.name}</div>
+                <div class="item-scent">Scent: ${item.scent}</div>
+                ${designHTML}
+              </div>
+              <div class="item-price">$${item.price.toFixed(2)}</div>
+              <button type="button" class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+            </div>
+          `;
+          total += item.price;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('cart-total').textContent = total.toFixed(2);
+      }
+
+      function removeFromCart(index) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart(cart);
+      }
+
+      function submitInquiry(e) {
+        e.preventDefault();
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+          alert('Your cart is empty!');
+          return;
+        }
+
+        const formData = {
+          firstName: document.getElementById('first-name').value,
+          lastName: document.getElementById('last-name').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: document.getElementById('address').value,
+          city: document.getElementById('city').value,
+          zip: document.getElementById('zip').value,
+          specialRequests: document.getElementById('special-requests').value,
+          items: cart,
+          total: cart.reduce((sum, item) => sum + item.price, 0),
+          submittedAt: new Date().toISOString()
+        };
+
+        // Log the inquiry (in a real app, this would send to a server)
+        console.log('Inquiry Submitted:', formData);
+
+        // Save to localStorage for demonstration
+        let inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        inquiries.push(formData);
+        localStorage.setItem('inquiries', JSON.stringify(inquiries));
+
+        // Show success message
+        alert(`Thank you for your inquiry, ${formData.firstName}!\n\nWe will contact you at ${formData.phone} or ${formData.email} within 3 business days to schedule your pickup.\n\nOrder Total: $${formData.total.toFixed(2)}`);
+
+        // Clear cart and form
+        localStorage.removeItem('cart');
+        document.getElementById('inquiry-form').reset();
+        initCart();
+      }
+
+      // Attach form submission
+      document.getElementById('inquiry-form').addEventListener('submit', submitInquiry);
+
+      // Initialize on page load
+      window.addEventListener('load', initCart);
+    </script>
+  </body>
+</html>

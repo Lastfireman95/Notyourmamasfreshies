@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Not Your Mama's Freshies — Admin Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #f5f5f5;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .header {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header h1 {
+        color: #333;
+      }
+      .header p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+        .reset-stats-btn {
+          background-color: #f39c12;
+          color: white;
+          border: none;
+          padding: 0.6rem 1.2rem;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: bold;
+          transition: background-color 0.3s;
+          margin-right: 0.5rem;
+        }
+        .reset-stats-btn:hover {
+          background-color: #e67e22;
+        }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .dashboard-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .dashboard-card h2 {
+        color: #333;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .stat {
+        text-align: center;
+        padding: 1rem;
+      }
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #27ae60;
+      }
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+      .inquiry-item {
+        background: #f9f9f9;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #27ae60;
+        border-radius: 4px;
+      }
+      .inquiry-item h3 {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+      .inquiry-detail {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0.3rem 0;
+      }
+      .inquiry-items {
+        background: #e8f5e9;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        border-radius: 3px;
+        font-size: 0.85rem;
+      }
+      .no-inquiries {
+        color: #999;
+        text-align: center;
+        padding: 2rem;
+      }
+      .section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+      }
+      .section h2 {
+        color: #333;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table th {
+        background-color: #f5f5f5;
+        color: #333;
+        padding: 0.8rem;
+        text-align: left;
+        border-bottom: 2px solid #ddd;
+        font-weight: bold;
+      }
+      table td {
+        padding: 0.8rem;
+        border-bottom: 1px solid #ddd;
+        color: #666;
+      }
+      table tr:hover {
+        background-color: #f9f9f9;
+      }
+      .export-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .export-btn:hover {
+        background-color: #2980b9;
+      }
+      .clear-btn {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        margin-left: 0.5rem;
+      }
+      .clear-btn:hover {
+        background-color: #c0392b;
+      }
+      .button-group {
+        margin-bottom: 1rem;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #999;
+      }
+      @media (max-width: 600px) {
+        .header {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+        table {
+          font-size: 0.9rem;
+        }
+        table th, table td {
+          padding: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Logged in as: <strong id="admin-username">CarolinePurcell</strong></p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+
+          <div>
+            <button class="reset-stats-btn" onclick="resetStats()">Reset Stats</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+          </div>
+      <!-- Statistics Dashboard -->
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h2>Total Inquiries</h2>
+          <div class="stat">
+            <div class="stat-number" id="total-inquiries">0</div>
+            <div class="stat-label">Customer Orders</div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <h2>Total Revenue</h2>
+          <div class="stat">
+            <div class="stat-number" id="total-revenue">$0.00</div>
+            <div class="stat-label">From All Orders</div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <h2>Average Order Value</h2>
+          <div class="stat">
+            <div class="stat-number" id="avg-order-value">$0.00</div>
+            <div class="stat-label">Per Customer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Inquiries Section -->
+      <div class="section">
+        <h2>Recent Customer Inquiries</h2>
+        <div id="inquiries-container" class="empty-state">
+          <p>No inquiries yet.</p>
+        </div>
+      </div>
+
+      <!-- All Inquiries Table -->
+      <div class="section">
+        <div class="button-group">
+          <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+          <button class="clear-btn" onclick="clearAllInquiries()">Clear All Data</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="inquiries-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th>Order Total</th>
+                <th>Items</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Check if admin is logged in
+      function checkAuth() {
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+          window.location.href = 'admin-login.html';
+        }
+      }
+
+      // Logout
+      function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+          sessionStorage.removeItem('adminLoggedIn');
+          sessionStorage.removeItem('adminUsername');
+          window.location.href = 'admin-login.html';
+        }
+      }
+
+      // Load and display inquiries
+      function loadInquiries() {
+        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        
+        // Update statistics
+        document.getElementById('total-inquiries').textContent = inquiries.length;
+        
+        if (inquiries.length === 0) {
+          document.getElementById('inquiries-container').innerHTML = '<p class="empty-state">No inquiries yet.</p>';
+          document.getElementById('table-body').innerHTML = '';
+          return;
+        }
+
+        // Calculate totals
+        let totalRevenue = 0;
+        inquiries.forEach(inquiry => {
+          totalRevenue += inquiry.total;
+        });
+        
+        const avgOrderValue = inquiries.length > 0 ? totalRevenue / inquiries.length : 0;
+        
+        document.getElementById('total-revenue').textContent = '$' + totalRevenue.toFixed(2);
+        document.getElementById('avg-order-value').textContent = '$' + avgOrderValue.toFixed(2);
+
+        // Display recent inquiries
+        const recentInquiries = inquiries.slice(-5).reverse();
+        let recentHTML = '';
+        recentInquiries.forEach(inquiry => {
+          const date = new Date(inquiry.submittedAt).toLocaleDateString();
+          const itemsCount = inquiry.items.length;
+          const productsHTML = inquiry.items.map(item => {
+            let designPart = '';
+            if (item.cardstock && item.cardstock.image) {
+              const img = item.cardstock.image.src || '';
+              const desc = item.cardstock.image.desc || '';
+              designPart = `<div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.25rem;"><img src="${img}" alt="design" style="width:48px;height:48px;object-fit:cover;border-radius:4px;" /><div style="font-size:0.85rem;color:#666;">${desc}</div></div>`;
+            }
+            return `<div>• ${item.name} (${item.scent}) - $${item.price.toFixed(2)}${designPart}</div>`;
+          }).join('');
+
+          recentHTML += `
+            <div class="inquiry-item">
+              <h3>${inquiry.firstName} ${inquiry.lastName}</h3>
+              <div class="inquiry-detail"><strong>Email:</strong> ${inquiry.email}</div>
+              <div class="inquiry-detail"><strong>Phone:</strong> ${inquiry.phone}</div>
+              <div class="inquiry-detail"><strong>Address:</strong> ${inquiry.address}, ${inquiry.city} ${inquiry.zip}</div>
+              <div class="inquiry-detail"><strong>Order Total:</strong> $${inquiry.total.toFixed(2)}</div>
+              <div class="inquiry-detail"><strong>Items:</strong> ${itemsCount}</div>
+              <div class="inquiry-detail"><strong>Date:</strong> ${date}</div>
+              ${inquiry.specialRequests ? `<div class="inquiry-detail"><strong>Special Requests:</strong> ${inquiry.specialRequests}</div>` : ''}
+              <div class="inquiry-items">
+                <strong>Products:</strong>
+                ${productsHTML}
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById('inquiries-container').innerHTML = recentHTML;
+
+        // Populate table
+        let tableHTML = '';
+        inquiries.forEach(inquiry => {
+          const date = new Date(inquiry.submittedAt).toLocaleDateString();
+          const itemsCount = inquiry.items.length;
+          tableHTML += `
+            <tr>
+              <td>${inquiry.firstName} ${inquiry.lastName}</td>
+              <td>${inquiry.email}</td>
+              <td>${inquiry.phone}</td>
+              <td>${inquiry.city}</td>
+              <td>$${inquiry.total.toFixed(2)}</td>
+              <td>${itemsCount}</td>
+              <td>${date}</td>
+            </tr>
+          `;
+        });
+        document.getElementById('table-body').innerHTML = tableHTML;
+      }
+
+      // Export to CSV
+      function exportToCSV() {
+        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        if (inquiries.length === 0) {
+          alert('No inquiries to export.');
+          return;
+        }
+
+        // Add an Items column that includes design info when present
+        let csv = 'First Name,Last Name,Email,Phone,Address,City,ZIP,Order Total,Items Count,Items,Date\n';
+        
+        inquiries.forEach(inquiry => {
+          const date = new Date(inquiry.submittedAt).toLocaleDateString();
+          const itemsStr = inquiry.items.map(item => {
+            const base = `${item.name} (${item.scent}) - $${item.price.toFixed(2)}`;
+            if (item.cardstock && item.cardstock.image) {
+              const id = item.cardstock.image.id || '';
+              const desc = item.cardstock.image.desc || '';
+              return `${base} [${id}: ${desc}]`;
+            }
+            return base;
+          }).join(' | ');
+
+          csv += `"${inquiry.firstName}","${inquiry.lastName}","${inquiry.email}","${inquiry.phone}","${inquiry.address}","${inquiry.city}","${inquiry.zip}","${inquiry.total.toFixed(2)}","${inquiry.items.length}","${itemsStr}","${date}"\n`;
+        });
+
+        // Create download link
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'inquiries_' + new Date().toISOString().split('T')[0] + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+
+      // Clear all inquiries
+      function clearAllInquiries() {
+        if (confirm('Are you sure you want to delete all inquiries? This cannot be undone.')) {
+          localStorage.removeItem('inquiries');
+          loadInquiries();
+          alert('All inquiries have been cleared.');
+        }
+      }
+
+        // Reset statistics
+        function resetStats() {
+          if (confirm('Are you sure you want to reset all statistics? This will clear all inquiry data. This cannot be undone.')) {
+            localStorage.removeItem('inquiries');
+            document.getElementById('total-inquiries').textContent = '0';
+            document.getElementById('total-revenue').textContent = '$0.00';
+            document.getElementById('avg-order-value').textContent = '$0.00';
+            document.getElementById('inquiries-container').innerHTML = '<p class="empty-state">No inquiries yet.</p>';
+            document.getElementById('table-body').innerHTML = '';
+            alert('All statistics have been reset.');
+          }
+        }
+      // Initialize on page load
+      window.addEventListener('load', function() {
+        checkAuth();
+        const username = sessionStorage.getItem('adminUsername');
+        if (username) {
+          document.getElementById('admin-username').textContent = username;
+        }
+        loadInquiries();
+      });
+    </script>
+  </body>
+</html>
