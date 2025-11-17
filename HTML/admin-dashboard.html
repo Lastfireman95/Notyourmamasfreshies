@@ -191,6 +191,87 @@
         padding: 2rem;
         color: #999;
       }
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #ddd;
+      }
+      .tab {
+        background: transparent;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s;
+      }
+      .tab:hover {
+        color: #333;
+        background: #f9f9f9;
+      }
+      .tab.active {
+        color: #27ae60;
+        border-bottom-color: #27ae60;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .inquiry-actions {
+        margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .mark-filled-btn {
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .mark-filled-btn:hover {
+        background-color: #229954;
+      }
+      .restore-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .restore-btn:hover {
+        background-color: #2980b9;
+      }
+      .delete-btn {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .delete-btn:hover {
+        background-color: #c0392b;
+      }
+      .inquiry-item.filled {
+        border-left-color: #95a5a6;
+        opacity: 0.9;
+      }
       @media (max-width: 600px) {
         .header {
           flex-direction: column;
@@ -226,10 +307,18 @@
       <!-- Statistics Dashboard -->
       <div class="dashboard-grid">
         <div class="dashboard-card">
-          <h2>Total Inquiries</h2>
+          <h2>Pending Inquiries</h2>
           <div class="stat">
-            <div class="stat-number" id="total-inquiries">0</div>
-            <div class="stat-label">Customer Orders</div>
+            <div class="stat-number" id="pending-inquiries">0</div>
+            <div class="stat-label">Active Orders</div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <h2>Filled Orders</h2>
+          <div class="stat">
+            <div class="stat-number" id="filled-inquiries">0</div>
+            <div class="stat-label">Completed Orders</div>
           </div>
         </div>
 
@@ -250,11 +339,24 @@
         </div>
       </div>
 
-      <!-- Recent Inquiries Section -->
+      <!-- Customer Inquiries Section with Tabs -->
       <div class="section">
-        <h2>Recent Customer Inquiries</h2>
-        <div id="inquiries-container" class="empty-state">
-          <p>No inquiries yet.</p>
+        <h2>Customer Inquiries</h2>
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('pending')">Pending Orders</button>
+          <button class="tab" onclick="switchTab('filled')">Filled Orders</button>
+        </div>
+        
+        <div id="pending-tab" class="tab-content active">
+          <div id="pending-inquiries-container" class="empty-state">
+            <p>No pending inquiries.</p>
+          </div>
+        </div>
+        
+        <div id="filled-tab" class="tab-content">
+          <div id="filled-inquiries-container" class="empty-state">
+            <p>No filled orders yet.</p>
+          </div>
         </div>
       </div>
 
@@ -271,10 +373,10 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>City</th>
                 <th>Order Total</th>
                 <th>Items</th>
                 <th>Date</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody id="table-body">
@@ -346,7 +448,6 @@
               <h3>${inquiry.firstName} ${inquiry.lastName}</h3>
               <div class="inquiry-detail"><strong>Email:</strong> ${inquiry.email}</div>
               <div class="inquiry-detail"><strong>Phone:</strong> ${inquiry.phone}</div>
-              <div class="inquiry-detail"><strong>Address:</strong> ${inquiry.address}, ${inquiry.city} ${inquiry.zip}</div>
               <div class="inquiry-detail"><strong>Order Total:</strong> $${inquiry.total.toFixed(2)}</div>
               <div class="inquiry-detail"><strong>Items:</strong> ${itemsCount}</div>
               <div class="inquiry-detail"><strong>Date:</strong> ${date}</div>
@@ -358,26 +459,131 @@
             </div>
           `;
         });
-        document.getElementById('inquiries-container').innerHTML = recentHTML;
+        displayInquiriesList(pendingInquiries, 'pending-inquiries-container', false);
+        
+        // Display filled inquiries  
+        displayInquiriesList(filledInquiries, 'filled-inquiries-container', true);
 
         // Populate table
+        const allInquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
         let tableHTML = '';
-        inquiries.forEach(inquiry => {
+        allInquiries.forEach((inquiry, index) => {
           const date = new Date(inquiry.submittedAt).toLocaleDateString();
           const itemsCount = inquiry.items.length;
+          const status = inquiry.filled ? 'Filled' : 'Pending';
           tableHTML += `
             <tr>
               <td>${inquiry.firstName} ${inquiry.lastName}</td>
               <td>${inquiry.email}</td>
               <td>${inquiry.phone}</td>
-              <td>${inquiry.city}</td>
               <td>$${inquiry.total.toFixed(2)}</td>
               <td>${itemsCount}</td>
               <td>${date}</td>
+              <td>${status}</td>
             </tr>
           `;
         });
         document.getElementById('table-body').innerHTML = tableHTML;
+      }
+      
+      // Display inquiries list
+      function displayInquiriesList(inquiriesList, containerId, isFilled) {
+        const container = document.getElementById(containerId);
+        
+        if (inquiriesList.length === 0) {
+          container.innerHTML = `<p class="empty-state">No ${isFilled ? 'filled' : 'pending'} inquiries.</p>`;
+          return;
+        }
+        
+        let html = '';
+        inquiriesList.forEach((inquiry, index) => {
+          const date = new Date(inquiry.submittedAt).toLocaleDateString();
+          const itemsCount = inquiry.items.length;
+          const productsHTML = inquiry.items.map(item => {
+            let designPart = '';
+            if (item.cardstock && item.cardstock.image) {
+              const img = item.cardstock.image.src || '';
+              const desc = item.cardstock.image.desc || '';
+              designPart = `<div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.25rem;"><img src="${img}" alt="design" style="width:48px;height:48px;object-fit:cover;border-radius:4px;" /><div style="font-size:0.85rem;color:#666;">${desc}</div></div>`;
+            }
+            return `<div>• ${item.name} (${item.scent}) - $${item.price.toFixed(2)}${designPart}</div>`;
+          }).join('');
+          
+          // Find the original index in the full inquiries array
+          const allInquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+          const originalIndex = allInquiries.findIndex(inq => 
+            inq.submittedAt === inquiry.submittedAt && 
+            inq.email === inquiry.email
+          );
+
+          html += `
+            <div class="inquiry-item ${isFilled ? 'filled' : ''}">
+              <h3>${inquiry.firstName} ${inquiry.lastName}</h3>
+              <div class="inquiry-detail"><strong>Email:</strong> ${inquiry.email}</div>
+              <div class="inquiry-detail"><strong>Phone:</strong> ${inquiry.phone}</div>
+              <div class="inquiry-detail"><strong>Order Total:</strong> $${inquiry.total.toFixed(2)}</div>
+              <div class="inquiry-detail"><strong>Items:</strong> ${itemsCount}</div>
+              <div class="inquiry-detail"><strong>Date:</strong> ${date}</div>
+              ${inquiry.specialRequests ? `<div class="inquiry-detail"><strong>Special Requests:</strong> ${inquiry.specialRequests}</div>` : ''}
+              ${inquiry.filledDate ? `<div class="inquiry-detail"><strong>Filled Date:</strong> ${new Date(inquiry.filledDate).toLocaleDateString()}</div>` : ''}
+              <div class="inquiry-items">
+                <strong>Products:</strong>
+                ${productsHTML}
+              </div>
+              <div class="inquiry-actions">
+                ${!isFilled ? 
+                  `<button class="mark-filled-btn" onclick="markAsFilled(${originalIndex})">Mark as Filled</button>` : 
+                  `<button class="restore-btn" onclick="restoreToPending(${originalIndex})">Restore to Pending</button>`
+                }
+                <button class="delete-btn" onclick="deleteInquiry(${originalIndex})">Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      }
+      
+      // Switch between tabs
+      function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(tabName + '-tab').classList.add('active');
+      }
+      
+      // Mark inquiry as filled
+      function markAsFilled(index) {
+        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        if (inquiries[index]) {
+          inquiries[index].filled = true;
+          inquiries[index].filledDate = new Date().toISOString();
+          localStorage.setItem('inquiries', JSON.stringify(inquiries));
+          loadInquiries();
+        }
+      }
+      
+      // Restore inquiry to pending
+      function restoreToPending(index) {
+        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        if (inquiries[index]) {
+          inquiries[index].filled = false;
+          delete inquiries[index].filledDate;
+          localStorage.setItem('inquiries', JSON.stringify(inquiries));
+          loadInquiries();
+        }
+      }
+      
+      // Delete a single inquiry
+      function deleteInquiry(index) {
+        if (confirm('Are you sure you want to delete this inquiry?')) {
+          const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+          inquiries.splice(index, 1);
+          localStorage.setItem('inquiries', JSON.stringify(inquiries));
+          loadInquiries();
+        }
       }
 
       // Export to CSV

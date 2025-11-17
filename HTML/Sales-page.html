@@ -99,6 +99,100 @@
         border-color: sandybrown;
         box-shadow: 0 0 4px rgba(210,105,30,0.3);
       }
+      /* Custom dropdown with thumbnails */
+      .custom-select {
+        position: relative;
+        width: 100%;
+      }
+      .custom-select select {
+        display: none;
+      }
+      .select-selected {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 0.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .select-selected:after {
+        content: "▼";
+        position: absolute;
+        right: 10px;
+        font-size: 0.8rem;
+        color: #666;
+      }
+      .select-selected.select-arrow-active:after {
+        content: "▲";
+      }
+      .select-items {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 2px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      .select-hide {
+        display: none;
+      }
+      .select-items div {
+        padding: 0.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .select-items div:hover {
+        background-color: #f5f5f5;
+      }
+      .select-items div img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .select-items div .no-image {
+        width: 40px;
+        height: 40px;
+        border: 2px dashed #ccc;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9f9f9;
+        font-size: 1.5rem;
+        color: #999;
+      }
+      .select-selected img {
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .select-selected .no-image {
+        width: 30px;
+        height: 30px;
+        border: 2px dashed #ccc;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9f9f9;
+        font-size: 1.2rem;
+        color: #999;
+      }
       button {
         padding: 0.8rem 1.5rem;
         background-color: #27ae60;
@@ -158,24 +252,15 @@
               <option value="Cinnamon Roll">Cinnamon Roll</option>
             </select>
           </div>
-          <div class="form-group" id="cardstock-image-1" style="display:block;">
-            <label>Choose Cardstock Design:</label>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-1" value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals" />
-                <img src="../Resources/Images/background.jpg" alt="Design 1" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Floral<br/>Soft pink florals</small>
-              </label>
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-1" value="design2" data-img="../Resources/Images/background.jpg" data-desc="Geometric - Modern shapes" />
-                <img src="../Resources/Images/background.jpg" alt="Design 2" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Cow<br/>Highland Cow</small>
-              </label>
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-1" value="design3" data-img="../Resources/Images/background.jpg" data-desc="Plain - Solid color background" />
-                <img src="../Resources/Images/background.jpg" alt="Design 3" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Plain<br/>Solid color</small>
-              </label>
+          <div class="form-group">
+            <label for="cardstock-1">Choose Cardstock Design:</label>
+            <div class="custom-select">
+              <select name="cardstock" id="cardstock-1">
+                <option value="none" data-img="" data-desc="None - No cardstock">None - No cardstock</option>
+                <option value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals">Floral - Soft pink florals</option>
+                <option value="design2" data-img="../Resources/Images/background.jpg" data-desc="Cow - Highland Cow">Cow - Highland Cow</option>
+                <option value="design3" data-img="../Resources/Images/background.jpg" data-desc="Plain - Solid color background">Plain - Solid color</option>
+              </select>
             </div>
           </div>
           <button type="button" onclick="addToCart('Small Rounds', 7.00, this)">Add to Cart</button>
@@ -199,24 +284,15 @@
               <option value="Cinnamon Roll">Cinnamon Roll</option>
             </select>
           </div>
-          <div class="form-group" id="cardstock-image-2" style="display:block;">
-            <label>Choose Cardstock Design:</label>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-2" value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals" />
-                <img src="../Resources/Images/background.jpg" alt="Design 1" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Floral<br/>Soft pink florals</small>
-              </label>
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-2" value="design2" data-img="../Resources/Images/background.jpg" data-desc="Geometric - Modern shapes" />
-                <img src="../Resources/Images/background.jpg" alt="Design 2" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Cow<br/>Highland Cow</small>
-              </label>
-              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
-                <input type="radio" name="cardstock-choice-2" value="design3" data-img="../Resources/Images/background.jpg" data-desc="Plain - Solid color background" />
-                <img src="../Resources/Images/background.jpg" alt="Design 3" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
-                <small style="max-width:90px;text-align:center;">Plain<br/>Solid color</small>
-              </label>
+          <div class="form-group">
+            <label for="cardstock-2">Choose Cardstock Design:</label>
+            <div class="custom-select">
+              <select name="cardstock" id="cardstock-2">
+                <option value="none" data-img="" data-desc="None - No cardstock">None - No cardstock</option>
+                <option value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals">Floral - Soft pink florals</option>
+                <option value="design2" data-img="../Resources/Images/background.jpg" data-desc="Cow - Highland Cow">Cow - Highland Cow</option>
+                <option value="design3" data-img="../Resources/Images/background.jpg" data-desc="Plain - Solid color background">Plain - Solid color</option>
+              </select>
             </div>
           </div>
           <button type="button" onclick="addToCart('Large Rounds', 10.00, this)">Add to Cart</button>
@@ -509,21 +585,15 @@
           return;
         }
 
-        // Try to find a selected predefined design inside this form
-        const selected = form.querySelector('input[name^="cardstock-choice"]:checked');
+        // Try to find a cardstock select dropdown inside this form
+        const cardstockSelect = form.querySelector('select[name="cardstock"]');
         let cardstockImage = null;
-        if (selected) {
-          const imgSrc = selected.dataset.img || selected.getAttribute('data-img');
-          const desc = selected.dataset.desc || selected.getAttribute('data-desc') || '';
-          const id = selected.value || '';
+        if (cardstockSelect) {
+          const selectedOption = cardstockSelect.options[cardstockSelect.selectedIndex];
+          const imgSrc = selectedOption.dataset.img || selectedOption.getAttribute('data-img');
+          const desc = selectedOption.dataset.desc || selectedOption.getAttribute('data-desc') || '';
+          const id = selectedOption.value || '';
           cardstockImage = { id: id, src: imgSrc, desc: desc };
-        }
-
-        // If the form includes a cardstock gallery, require a selection
-        const gallery = form.querySelector('[id^="cardstock-image"]');
-        if (gallery && !cardstockImage) {
-          alert('Please choose a cardstock design before adding to cart.');
-          return;
         }
 
         // Get existing cart from localStorage
@@ -554,6 +624,116 @@
 
       // Update cart count on page load
       window.addEventListener('load', updateCartCount);
+
+      // Initialize custom dropdowns with thumbnails
+      function initCustomSelects() {
+        const customSelects = document.querySelectorAll('.custom-select');
+        
+        customSelects.forEach(customSelect => {
+          const selectElement = customSelect.querySelector('select');
+          if (!selectElement) return;
+          
+          // Create custom dropdown display
+          const selectedDiv = document.createElement('div');
+          selectedDiv.className = 'select-selected';
+          
+          // Create items container
+          const itemsDiv = document.createElement('div');
+          itemsDiv.className = 'select-items select-hide';
+          
+          // Populate with options
+          Array.from(selectElement.options).forEach((option, index) => {
+            const optionDiv = document.createElement('div');
+            const imgSrc = option.getAttribute('data-img');
+            
+            if (imgSrc) {
+              const img = document.createElement('img');
+              img.src = imgSrc;
+              img.alt = option.text;
+              optionDiv.appendChild(img);
+            } else {
+              const noImg = document.createElement('div');
+              noImg.className = 'no-image';
+              noImg.innerHTML = '∅';
+              optionDiv.appendChild(noImg);
+            }
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = option.text;
+            optionDiv.appendChild(textSpan);
+            
+            optionDiv.addEventListener('click', function(e) {
+              selectElement.selectedIndex = index;
+              updateSelectedDisplay(selectedDiv, option);
+              closeAllSelect(selectedDiv);
+              e.stopPropagation();
+            });
+            
+            itemsDiv.appendChild(optionDiv);
+          });
+          
+          customSelect.appendChild(selectedDiv);
+          customSelect.appendChild(itemsDiv);
+          
+          // Set initial selection
+          updateSelectedDisplay(selectedDiv, selectElement.options[0]);
+          
+          // Toggle dropdown on click
+          selectedDiv.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAllSelect(this);
+            itemsDiv.classList.toggle('select-hide');
+            this.classList.toggle('select-arrow-active');
+          });
+        });
+      }
+      
+      function updateSelectedDisplay(selectedDiv, option) {
+        selectedDiv.innerHTML = '';
+        const imgSrc = option.getAttribute('data-img');
+        
+        if (imgSrc) {
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = option.text;
+          selectedDiv.appendChild(img);
+        } else {
+          const noImg = document.createElement('div');
+          noImg.className = 'no-image';
+          noImg.innerHTML = '∅';
+          selectedDiv.appendChild(noImg);
+        }
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = option.text;
+        selectedDiv.appendChild(textSpan);
+        
+        // Re-add arrow indicator
+        const arrow = document.createElement('span');
+        selectedDiv.appendChild(arrow);
+      }
+      
+      function closeAllSelect(elmnt) {
+        const items = document.querySelectorAll('.select-items');
+        const selected = document.querySelectorAll('.select-selected');
+        
+        items.forEach((item, index) => {
+          if (elmnt !== selected[index]) {
+            item.classList.add('select-hide');
+            selected[index].classList.remove('select-arrow-active');
+          }
+        });
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function() {
+        closeAllSelect(null);
+      });
+      
+      // Initialize on page load
+      window.addEventListener('load', function() {
+        initCustomSelects();
+      });
     </script>
   </body>
 </html>
