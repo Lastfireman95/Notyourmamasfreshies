@@ -127,6 +127,20 @@
       .back-link:hover {
         text-decoration: underline;
       }
+      footer {
+        max-width: 1200px;
+        margin: 1.5rem auto 0;
+        background: rgba(255,255,255,0.8);
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      footer p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #333;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -153,14 +167,28 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
           <div class="form-group" id="cardstock-image-1" style="display:block;">
             <label>Choose Cardstock Design:</label>
             <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                <input type="radio" name="cardstock-choice-1" value="none" data-img="" data-desc="None - No cardstock" />
+                <div style="width:80px;height:80px;border:2px dashed #ccc;border-radius:4px;margin-top:0.3rem;display:flex;align-items:center;justify-content:center;background:#f9f9f9;">
+                  <span style="font-size:2rem;color:#999;">∅</span>
+                </div>
+                <small style="max-width:90px;text-align:center;">None<br/>No cardstock</small>
+              </label>
               <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
                 <input type="radio" name="cardstock-choice-1" value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals" />
                 <img src="../Resources/Images/background.jpg" alt="Design 1" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
@@ -194,14 +222,28 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
           <div class="form-group" id="cardstock-image-2" style="display:block;">
             <label>Choose Cardstock Design:</label>
             <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+                <input type="radio" name="cardstock-choice-2" value="none" data-img="" data-desc="None - No cardstock" />
+                <div style="width:80px;height:80px;border:2px dashed #ccc;border-radius:4px;margin-top:0.3rem;display:flex;align-items:center;justify-content:center;background:#f9f9f9;">
+                  <span style="font-size:2rem;color:#999;">∅</span>
+                </div>
+                <small style="max-width:90px;text-align:center;">None<br/>No cardstock</small>
+              </label>
               <label style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
                 <input type="radio" name="cardstock-choice-2" value="design1" data-img="../Resources/Images/background.jpg" data-desc="Floral - Soft pink florals" />
                 <img src="../Resources/Images/background.jpg" alt="Design 1" style="width:80px;height:80px;object-fit:cover;border-radius:4px;margin-top:0.3rem;" />
@@ -235,12 +277,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Large Rounds', 13.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Behind Every Bad B**ch', 13.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -256,12 +305,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Car Vent Clips', 8.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Winter Cow', 13.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -277,12 +333,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Hanging Charms', 6.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Donut', 10.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -296,14 +359,21 @@
             <label for="scent-6">Select Scent:</label>
             <select name="scent" id="scent-6">
               <option value="">Choose a scent...</option>
-              <option value="vanilla">Vanilla</option>
-              <option value="lavender">Lavender</option>
-              <option value="citrus">Citrus</option>
-              <option value="pine">Pine</option>
-              <option value="ocean">Ocean Breeze</option>
+              <option value="Narcissist">Narcissist</option>
+              <option value="Diva">Diva</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
+              <option value="Pumpkin Spice">Pumpkin Spice</option>
+              <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Wax Melts Set', 12.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Tree Cake', 7.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -319,12 +389,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Home Spray', 9.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Coffee Cup', 10.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -340,20 +417,27 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Car Spray', 8.50, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Pumpkin', 13.00, this)">Add to Cart</button>
         </form>
       </div>
 
-      <!-- Product 9 -->
+      <!-- Christmas Tree Truck -->
       <div class="product-card">
-        <div class="product-image">Pillow Spray</div>
-        <div class="product-name">Pillow Spray</div>
-        <div class="product-price">$7.50</div>
+        <div class="product-image">Christmas Tree Truck</div>
+        <div class="product-name">Christmas Tree Truck</div>
+        <div class="product-price">$13.00</div>
         <form class="product-form">
           <div class="form-group">
             <label for="scent-9">Select Scent:</label>
@@ -361,20 +445,27 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Pillow Spray', 7.50, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Christmas Tree Truck', 13.00, this)">Add to Cart</button>
         </form>
       </div>
 
-      <!-- Product 10 -->
+      <!-- 12 Gauge -->
       <div class="product-card">
-        <div class="product-image">Locker Freshies</div>
-        <div class="product-name">Locker Freshies</div>
-        <div class="product-price">$5.00</div>
+        <div class="product-image">12 Gauge</div>
+        <div class="product-name">12 Gauge</div>
+        <div class="product-price">$10.00</div>
         <form class="product-form">
           <div class="form-group">
             <label for="scent-10">Select Scent:</label>
@@ -382,20 +473,27 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Locker Freshies', 5.00, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('12 Gauge', 1000, this)">Add to Cart</button>
         </form>
       </div>
 
-      <!-- Product 11 -->
+      <!-- Deer in Crosshairs -->
       <div class="product-card">
-        <div class="product-image">Closet Freshies</div>
-        <div class="product-name">Closet Freshies</div>
-        <div class="product-price">$6.50</div>
+        <div class="product-image">Deer in Crosshairs</div>
+        <div class="product-name">Deer in Crosshairs</div>
+        <div class="product-price">$10.00</div>
         <form class="product-form">
           <div class="form-group">
             <label for="scent-11">Select Scent:</label>
@@ -403,12 +501,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
+              <option value="Black Ice">Black Ice</option>
+              <option value="Snicker Doodle">Snicker Doodle</option>
             </select>
           </div>
-          <button type="button" onclick="addToCart('Closet Freshies', 6.50, this)">Add to Cart</button>
+          <button type="button" onclick="addToCart('Deer in Crosshairs', 10.00, this)">Add to Cart</button>
         </form>
       </div>
 
@@ -424,78 +529,19 @@
               <option value="">Choose a scent...</option>
               <option value="Narcissist">Narcissist</option>
               <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
+              <option value="Vanilla Bean">Vanilla Bean</option>
               <option value="Pumpkin Spice">Pumpkin Spice</option>
               <option value="Cinnamon Roll">Cinnamon Roll</option>
+              <option value="Fresh Linen">Fresh Linen</option>
+              <option value="Peppermint Twist">Peppermint Twist</option>
+              <option value="Tis the Season">Tis the Season</option>
+              <option value="Apple Cinnamon">Apple Cinnamon</option>
+              <option value="Campfire Marshmallow">Campfire Marshmallow</option>
             </select>
           </div>
           <button type="button" onclick="addToCart('Refrigerator Pods', 4.50, this)">Add to Cart</button>
         </form>
       </div>
-
-      <!-- Product 13 -->
-      <div class="product-card">
-        <div class="product-image">Bathroom Freshies</div>
-        <div class="product-name">Bathroom Freshies</div>
-        <div class="product-price">$7.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-13">Select Scent:</label>
-            <select name="scent" id="scent-13">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Bathroom Freshies', 7.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Product 14 -->
-      <div class="product-card">
-        <div class="product-image">Drawer Sachets</div>
-        <div class="product-name">Drawer Sachets</div>
-        <div class="product-price">$5.50</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-14">Select Scent:</label>
-            <select name="scent" id="scent-14">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Drawer Sachets', 5.50, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Product 15 -->
-      <div class="product-card">
-        <div class="product-image">Combo Bundle</div>
-        <div class="product-name">Combo Bundle</div>
-        <div class="product-price">$25.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-15">Select Scent:</label>
-            <select name="scent" id="scent-15">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla">Vanilla</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Combo Bundle', 25.00, this)">Add to Cart</button>
-        </form>
-      </div>
-    </div>
 
     <script>
       // Add to cart requires choosing a predefined Cardstock design for applicable products
@@ -555,5 +601,10 @@
       // Update cart count on page load
       window.addEventListener('load', updateCartCount);
     </script>
+    <footer>
+        <p>
+         &copy; 2025 Not Your Mama's Freshies. All rights reserved.<br> Designed by Kendal Purcell
+        </p>
+    </footer>
   </body>
 </html>
