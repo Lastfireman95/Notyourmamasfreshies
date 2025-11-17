@@ -27,8 +27,13 @@
         </head>
         <body>
             <h1>Not Your Mama's Freshies</h1>
-            <img src="/workspaces/Notyourmamasfreshies/Resources/Images/background.jpg">
+            <img src="../Resources/Images/background.jpg">
             <p>Simply a Southern Mama who wanted something better than the trees from the store to make the car smell better</p>
-            <button>See Items</button>
+            <button onclick="location.href='Sales-page.html'">See Items</button>
+            <footer>
+                <p>
+                    &copy; 2025 Not Your Mama's Freshies. All rights reserved. | Designed by Kendal Purcell
+                </p>
+            </footer>
         </body>
     </html>
