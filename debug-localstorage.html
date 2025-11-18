@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug LocalStorage</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; background: #27ae60; color: white; border: none; border-radius: 4px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>LocalStorage Debug Tool</h1>
+    
+    <div class="section">
+        <h2>Current Inquiries in LocalStorage</h2>
+        <pre id="inquiries-display">Loading...</pre>
+        <p>Count: <span id="inquiry-count">0</span></p>
+    </div>
+    
+    <div class="section">
+        <h2>Actions</h2>
+        <button onclick="loadData()">Refresh Data</button>
+        <button onclick="addSampleInquiry()">Add Sample Inquiry</button>
+        <button onclick="clearAll()">Clear All Inquiries</button>
+    </div>
+    
+    <div class="section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <script>
+        function loadData() {
+            const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+            document.getElementById('inquiries-display').textContent = JSON.stringify(inquiries, null, 2);
+            document.getElementById('inquiry-count').textContent = inquiries.length;
+            
+            // Run tests
+            runTests(inquiries);
+        }
+        
+        function runTests(inquiries) {
+            const results = document.getElementById('test-results');
+            let html = '<h3>Test Results:</h3>';
+            
+            html += `<p class="${inquiries.length > 0 ? 'success' : 'error'}">✓ Inquiries found: ${inquiries.length}</p>`;
+            
+            if (inquiries.length > 0) {
+                const lastInquiry = inquiries[inquiries.length - 1];
+                html += '<h4>Last Inquiry Structure:</h4>';
+                html += '<ul>';
+                html += `<li>Has firstName: ${lastInquiry.firstName ? '✓' : '✗'}</li>`;
+                html += `<li>Has lastName: ${lastInquiry.lastName ? '✓' : '✗'}</li>`;
+                html += `<li>Has email: ${lastInquiry.email ? '✓' : '✗'}</li>`;
+                html += `<li>Has phone: ${lastInquiry.phone ? '✓' : '✗'}</li>`;
+                html += `<li>Has items: ${lastInquiry.items ? '✓' : '✗'}</li>`;
+                html += `<li>Has total: ${lastInquiry.total !== undefined ? '✓' : '✗'}</li>`;
+                html += `<li>Has submittedAt: ${lastInquiry.submittedAt ? '✓' : '✗'}</li>`;
+                html += '</ul>';
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        function addSampleInquiry() {
+            let inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+            const newInquiry = {
+                firstName: 'Test',
+                lastName: 'Customer',
+                email: 'test@example.com',
+                phone: '555-1234',
+                specialRequests: 'This is a test inquiry',
+                items: [
+                    {
+                        name: 'Coffee Cup',
+                        scent: 'Vanilla',
+                        price: 10.00
+                    }
+                ],
+                total: 10.00,
+                submittedAt: new Date().toISOString()
+            };
+            inquiries.push(newInquiry);
+            localStorage.setItem('inquiries', JSON.stringify(inquiries));
+            loadData();
+            alert('Sample inquiry added! Now go to the admin dashboard and refresh.');
+        }
+        
+        function clearAll() {
+            if (confirm('Clear all inquiries from localStorage?')) {
+                localStorage.removeItem('inquiries');
+                loadData();
+                alert('All inquiries cleared!');
+            }
+        }
+        
+        // Load on page load
+        loadData();
+    </script>
+</body>
+</html>

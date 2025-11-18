@@ -418,12 +418,16 @@
 
       // Load and display inquiries
       function loadInquiries() {
+        console.log('loadInquiries() called');
         const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+        console.log('Total inquiries found:', inquiries.length);
+        console.log('Inquiries data:', inquiries);
         
         // Update statistics
         document.getElementById('total-inquiries').textContent = inquiries.length;
         
         if (inquiries.length === 0) {
+          console.log('No inquiries, showing empty state');
           document.getElementById('pending-inquiries-container').innerHTML = '<p class="empty-state">No pending inquiries.</p>';
           document.getElementById('filled-inquiries-container').innerHTML = '<p class="empty-state">No filled orders yet.</p>';
           document.getElementById('table-body').innerHTML = '';
@@ -446,6 +450,9 @@
         // Separate inquiries by status
         const pendingInquiries = inquiries.filter(inquiry => !inquiry.filled);
         const filledInquiries = inquiries.filter(inquiry => inquiry.filled);
+        
+        console.log('Pending inquiries:', pendingInquiries.length);
+        console.log('Filled inquiries:', filledInquiries.length);
         
         // Display pending inquiries
         displayInquiriesList(pendingInquiries, 'pending-inquiries-container', false);
@@ -477,25 +484,35 @@
       
       // Display inquiries list
       function displayInquiriesList(inquiriesList, containerId, isFilled) {
+        console.log(`displayInquiriesList called for ${containerId}, count: ${inquiriesList.length}, isFilled: ${isFilled}`);
         const container = document.getElementById(containerId);
         
+        if (!container) {
+          console.error('Container not found:', containerId);
+          return;
+        }
+        
         if (inquiriesList.length === 0) {
+          console.log(`No inquiries for ${containerId}, showing empty state`);
           container.innerHTML = `<p class="empty-state">No ${isFilled ? 'filled' : 'pending'} inquiries.</p>`;
           return;
         }
         
+        console.log(`Displaying ${inquiriesList.length} inquiries in ${containerId}`);
+        
         let html = '';
         inquiriesList.forEach((inquiry, index) => {
           const date = new Date(inquiry.submittedAt).toLocaleDateString();
-          const itemsCount = inquiry.items.length;
-          const productsHTML = inquiry.items.map(item => {
+          const itemsCount = inquiry.items ? inquiry.items.length : 0;
+          const productsHTML = (inquiry.items || []).map(item => {
             let designPart = '';
-            if (item.cardstock && item.cardstock.image) {
+            if (item.cardstock && item.cardstock.image && item.cardstock.image.src) {
               const img = item.cardstock.image.src || '';
               const desc = item.cardstock.image.desc || '';
               designPart = `<div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.25rem;"><img src="${img}" alt="design" style="width:48px;height:48px;object-fit:cover;border-radius:4px;" /><div style="font-size:0.85rem;color:#666;">${desc}</div></div>`;
             }
-            return `<div>• ${item.name} (${item.scent}) - $${item.price.toFixed(2)}${designPart}</div>`;
+            const itemScent = item.scent || 'No scent';
+            return `<div>• ${item.name} (${itemScent}) - $${item.price.toFixed(2)}${designPart}</div>`;
           }).join('');
           
           // Find the original index in the full inquiries array

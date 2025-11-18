@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Start a simple HTTP server serving the repository root so resources load correctly.
 # Usage: bash preview.sh
-PORT=8000
+PORT=5500
 echo "Serving $(pwd) on http://localhost:${PORT}/"
 echo ""
 echo "Preview pages:"
