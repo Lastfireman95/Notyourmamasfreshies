@@ -1,671 +1,810 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Not Your Mama's Freshies — Admin Dashboard</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Not Your Mama's Freshies</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        background-color: #f5f5f5;
-        font-family: Arial, Helvetica, sans-serif;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 1rem;
-      }
-      .header {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .header h1 {
-        color: #333;
-      }
-      .header p {
-        color: #666;
-        font-size: 0.9rem;
-      }
-      .logout-btn {
-        background-color: #e74c3c;
-        color: white;
-        border: none;
-        padding: 0.6rem 1.2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .logout-btn:hover {
-        background-color: #c0392b;
-      }
-        .reset-stats-btn {
-          background-color: #f39c12;
-          color: white;
-          border: none;
-          padding: 0.6rem 1.2rem;
-          border-radius: 4px;
-          cursor: pointer;
-          font-weight: bold;
-          transition: background-color 0.3s;
-          margin-right: 0.5rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .reset-stats-btn:hover {
-          background-color: #e67e22;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, sandybrown 0%, #764ba2 100%);
+            padding: 2rem;
+            min-height: 100vh;
         }
-      .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-      }
-      .dashboard-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-      .dashboard-card h2 {
-        color: #333;
-        border-bottom: 2px solid #ddd;
-        padding-bottom: 0.5rem;
-        margin-bottom: 1rem;
-      }
-      .stat {
-        text-align: center;
-        padding: 1rem;
-      }
-      .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #27ae60;
-      }
-      .stat-label {
-        color: #666;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-      }
-      footer {
-        background: white;
-        padding: 1rem;
-        text-align: center;
-        margin-top: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-      footer p {
-        margin: 0;
-        font-size: 0.85rem;
-        color: #333;
-      }
-      .inquiry-item {
-        background: #f9f9f9;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-left: 4px solid #27ae60;
-        border-radius: 4px;
-      }
-      .inquiry-item h3 {
-        color: #333;
-        margin-bottom: 0.5rem;
-      }
-      .inquiry-detail {
-        color: #666;
-        font-size: 0.9rem;
-        margin: 0.3rem 0;
-      }
-      .inquiry-items {
-        background: #e8f5e9;
-        padding: 0.5rem;
-        margin-top: 0.5rem;
-        border-radius: 3px;
-        font-size: 0.85rem;
-      }
-      .no-inquiries {
-        color: #999;
-        text-align: center;
-        padding: 2rem;
-      }
-      .section {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
-      }
-      .section h2 {
-        color: #333;
-        border-bottom: 2px solid #ddd;
-        padding-bottom: 0.5rem;
-        margin-bottom: 1rem;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      table th {
-        background-color: #f5f5f5;
-        color: #333;
-        padding: 0.8rem;
-        text-align: left;
-        border-bottom: 2px solid #ddd;
-        font-weight: bold;
-      }
-      table td {
-        padding: 0.8rem;
-        border-bottom: 1px solid #ddd;
-        color: #666;
-      }
-      table tr:hover {
-        background-color: #f9f9f9;
-      }
-      .export-btn {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 0.6rem 1.2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .export-btn:hover {
-        background-color: #2980b9;
-      }
-      .clear-btn {
-        background-color: #e74c3c;
-        color: white;
-        border: none;
-        padding: 0.6rem 1.2rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s;
-        margin-left: 0.5rem;
-      }
-      .clear-btn:hover {
-        background-color: #c0392b;
-      }
-      .button-group {
-        margin-bottom: 1rem;
-      }
-      .empty-state {
-        text-align: center;
-        padding: 2rem;
-        color: #999;
-      }
-      .tabs {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #ddd;
-      }
-      .tab {
-        background: transparent;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        cursor: pointer;
-        font-weight: bold;
-        color: #666;
-        border-bottom: 3px solid transparent;
-        transition: all 0.3s;
-      }
-      .tab:hover {
-        color: #333;
-        background: #f9f9f9;
-      }
-      .tab.active {
-        color: #27ae60;
-        border-bottom-color: #27ae60;
-      }
-      .tab-content {
-        display: none;
-      }
-      .tab-content.active {
-        display: block;
-      }
-      .inquiry-actions {
-        margin-top: 0.75rem;
-        display: flex;
-        gap: 0.5rem;
-      }
-      .mark-filled-btn {
-        background-color: #27ae60;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .mark-filled-btn:hover {
-        background-color: #229954;
-      }
-      .restore-btn {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .restore-btn:hover {
-        background-color: #2980b9;
-      }
-      .delete-btn {
-        background-color: #e74c3c;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .delete-btn:hover {
-        background-color: #c0392b;
-      }
-      .inquiry-item.filled {
-        border-left-color: #95a5a6;
-        opacity: 0.9;
-      }
-      @media (max-width: 600px) {
-        .header {
-          flex-direction: column;
-          gap: 1rem;
-          text-align: center;
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-        .dashboard-grid {
-          grid-template-columns: 1fr;
+
+        header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        table {
-          font-size: 0.9rem;
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
         }
-        table th, table td {
-          padding: 0.5rem;
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-      }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .stat-card.sales::before {
+            background: #3498db;
+        }
+
+        .stat-card.profit::before {
+            background: #27ae60;
+        }
+
+        .stat-card.items::before {
+            background: #f39c12;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-actions {
+            margin-top: 1rem;
+        }
+
+        .clear-stats-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+
+        .clear-stats-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .orders-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #d5dbdb;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-card {
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .customer-info {
+            flex: 1;
+        }
+
+        .customer-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-details {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .order-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: right;
+        }
+
+        .order-timestamp {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            text-align: right;
+        }
+
+        .order-items {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .order-items h4 {
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .item-scent {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .special-requests {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .special-requests strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .special-requests p {
+            color: #856404;
+            margin: 0;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-mark-filled {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-mark-filled:hover {
+            background: #229954;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .btn-restore {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-restore:hover {
+            background: #2980b9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #95a5a6;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-filled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .design-preview {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .design-preview img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .design-preview-desc {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .order-header {
+                flex-direction: column;
+            }
+
+            .order-total,
+            .order-timestamp {
+                text-align: left;
+                margin-top: 0.5rem;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <div>
-          <h1>Admin Dashboard</h1>
-          <p>Logged in as: <strong id="admin-username">CarolinePurcell</strong></p>
-        </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-
-          <div>
-            <button class="reset-stats-btn" onclick="resetStats()">Reset Stats</button>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Admin Dashboard</h1>
             <button class="logout-btn" onclick="logout()">Logout</button>
-          </div>
-      <!-- Statistics Dashboard -->
-      <div class="dashboard-grid">
-        <div class="dashboard-card">
-          <h2>Pending Inquiries</h2>
-          <div class="stat">
-            <div class="stat-number" id="pending-inquiries">0</div>
-            <div class="stat-label">Active Orders</div>
-          </div>
+        </header>
+
+        <!-- Statistics Section -->
+        <div class="stats-grid">
+            <div class="stat-card sales">
+                <div class="stat-label">Total Sales</div>
+                <div class="stat-value">$<span id="total-sales">0.00</span></div>
+                <div class="stat-actions">
+                    <button class="clear-stats-btn" onclick="clearStat('sales')">Clear Sales</button>
+                </div>
+            </div>
+
+            <div class="stat-card profit">
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-value"><span id="total-orders">0</span></div>
+                <div class="stat-actions">
+                    <button class="clear-stats-btn" onclick="clearStat('orders')">Clear Orders</button>
+                </div>
+            </div>
+
+            <div class="stat-card items">
+                <div class="stat-label">Items Sold</div>
+                <div class="stat-value"><span id="items-sold">0</span></div>
+                <div class="stat-actions">
+                    <button class="clear-stats-btn" onclick="clearStat('items')">Clear Items</button>
+                </div>
+            </div>
         </div>
 
-        <div class="dashboard-card">
-          <h2>Filled Orders</h2>
-          <div class="stat">
-            <div class="stat-number" id="filled-inquiries">0</div>
-            <div class="stat-label">Completed Orders</div>
-          </div>
-        </div>
+        <!-- Orders Section -->
+        <div class="orders-section">
+            <div class="section-header">
+                <h2>Order Management</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('pending')">
+                        Pending Orders <span class="badge badge-pending" id="pending-count">0</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('filled')">
+                        Filled Orders <span class="badge badge-filled" id="filled-count">0</span>
+                    </button>
+                </div>
+            </div>
 
-        <div class="dashboard-card">
-          <h2>Total Revenue</h2>
-          <div class="stat">
-            <div class="stat-number" id="total-revenue">$0.00</div>
-            <div class="stat-label">From All Orders</div>
-          </div>
-        </div>
+            <!-- Pending Orders Tab -->
+            <div id="pending-orders-tab" class="orders-list">
+                <!-- Orders will be dynamically inserted here -->
+            </div>
 
-        <div class="dashboard-card">
-          <h2>Average Order Value</h2>
-          <div class="stat">
-            <div class="stat-number" id="avg-order-value">$0.00</div>
-            <div class="stat-label">Per Customer</div>
-          </div>
+            <!-- Filled Orders Tab -->
+            <div id="filled-orders-tab" class="orders-list" style="display: none;">
+                <!-- Filled orders will be dynamically inserted here -->
+            </div>
         </div>
-      </div>
-
-      <!-- Customer Inquiries Section with Tabs -->
-      <div class="section">
-        <h2>Customer Inquiries</h2>
-        <div class="tabs">
-          <button class="tab active" onclick="switchTab('pending')">Pending Orders</button>
-          <button class="tab" onclick="switchTab('filled')">Filled Orders</button>
-        </div>
-        
-        <div id="pending-tab" class="tab-content active">
-          <div id="pending-inquiries-container" class="empty-state">
-            <p>No pending inquiries.</p>
-          </div>
-        </div>
-        
-        <div id="filled-tab" class="tab-content">
-          <div id="filled-inquiries-container" class="empty-state">
-            <p>No filled orders yet.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- All Inquiries Table -->
-      <div class="section">
-        <div class="button-group">
-          <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
-          <button class="clear-btn" onclick="clearAllInquiries()">Clear All Data</button>
-        </div>
-        <div style="overflow-x: auto;">
-          <table id="inquiries-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Order Total</th>
-                <th>Items</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="table-body">
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
     <script>
-      // Check if admin is logged in
-      function checkAuth() {
-        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
-          window.location.href = 'admin-login.html';
+        // Initialize dashboard data
+        function initDashboard() {
+            loadStats();
+            loadOrders();
         }
-      }
 
-      // Logout
-      function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-          sessionStorage.removeItem('adminLoggedIn');
-          sessionStorage.removeItem('adminUsername');
-          window.location.href = 'admin-login.html';
+        // Load statistics from localStorage
+        function loadStats() {
+            const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                totalSales: 0,
+                totalOrders: 0,
+                itemsSold: 0
+            };
+
+            document.getElementById('total-sales').textContent = stats.totalSales.toFixed(2);
+            document.getElementById('total-orders').textContent = stats.totalOrders;
+            document.getElementById('items-sold').textContent = stats.itemsSold;
         }
-      }
 
-      // Load and display inquiries
-      function loadInquiries() {
-        console.log('loadInquiries() called');
-        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        console.log('Total inquiries found:', inquiries.length);
-        console.log('Inquiries data:', inquiries);
-        
         // Update statistics
-        document.getElementById('total-inquiries').textContent = inquiries.length;
-        
-        if (inquiries.length === 0) {
-          console.log('No inquiries, showing empty state');
-          document.getElementById('pending-inquiries-container').innerHTML = '<p class="empty-state">No pending inquiries.</p>';
-          document.getElementById('filled-inquiries-container').innerHTML = '<p class="empty-state">No filled orders yet.</p>';
-          document.getElementById('table-body').innerHTML = '';
-          document.getElementById('total-revenue').textContent = '$0.00';
-          document.getElementById('avg-order-value').textContent = '$0.00';
-          return;
+        function updateStats() {
+            const pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
+            const filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
+            
+            let totalSales = 0;
+            let totalOrders = 0;
+            let itemsSold = 0;
+
+            // Calculate from filled orders only
+            filledOrders.forEach(order => {
+                totalSales += order.total;
+                totalOrders += 1;
+                itemsSold += order.items.length;
+            });
+
+            const stats = {
+                totalSales,
+                totalOrders,
+                itemsSold
+            };
+
+            localStorage.setItem('adminStats', JSON.stringify(stats));
+            loadStats();
         }
 
-        // Calculate totals
-        let totalRevenue = 0;
-        inquiries.forEach(inquiry => {
-          totalRevenue += inquiry.total;
-        });
-        
-        const avgOrderValue = inquiries.length > 0 ? totalRevenue / inquiries.length : 0;
-        
-        document.getElementById('total-revenue').textContent = '$' + totalRevenue.toFixed(2);
-        document.getElementById('avg-order-value').textContent = '$' + avgOrderValue.toFixed(2);
-
-        // Separate inquiries by status
-        const pendingInquiries = inquiries.filter(inquiry => !inquiry.filled);
-        const filledInquiries = inquiries.filter(inquiry => inquiry.filled);
-        
-        console.log('Pending inquiries:', pendingInquiries.length);
-        console.log('Filled inquiries:', filledInquiries.length);
-        
-        // Display pending inquiries
-        displayInquiriesList(pendingInquiries, 'pending-inquiries-container', false);
-        
-        // Display filled inquiries  
-        displayInquiriesList(filledInquiries, 'filled-inquiries-container', true);
-
-        // Populate table
-        const allInquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        let tableHTML = '';
-        allInquiries.forEach((inquiry, index) => {
-          const date = new Date(inquiry.submittedAt).toLocaleDateString();
-          const itemsCount = inquiry.items.length;
-          const status = inquiry.filled ? 'Filled' : 'Pending';
-          tableHTML += `
-            <tr>
-              <td>${inquiry.firstName} ${inquiry.lastName}</td>
-              <td>${inquiry.email}</td>
-              <td>${inquiry.phone}</td>
-              <td>$${inquiry.total.toFixed(2)}</td>
-              <td>${itemsCount}</td>
-              <td>${date}</td>
-              <td>${status}</td>
-            </tr>
-          `;
-        });
-        document.getElementById('table-body').innerHTML = tableHTML;
-      }
-      
-      // Display inquiries list
-      function displayInquiriesList(inquiriesList, containerId, isFilled) {
-        console.log(`displayInquiriesList called for ${containerId}, count: ${inquiriesList.length}, isFilled: ${isFilled}`);
-        const container = document.getElementById(containerId);
-        
-        if (!container) {
-          console.error('Container not found:', containerId);
-          return;
-        }
-        
-        if (inquiriesList.length === 0) {
-          console.log(`No inquiries for ${containerId}, showing empty state`);
-          container.innerHTML = `<p class="empty-state">No ${isFilled ? 'filled' : 'pending'} inquiries.</p>`;
-          return;
-        }
-        
-        console.log(`Displaying ${inquiriesList.length} inquiries in ${containerId}`);
-        
-        let html = '';
-        inquiriesList.forEach((inquiry, index) => {
-          const date = new Date(inquiry.submittedAt).toLocaleDateString();
-          const itemsCount = inquiry.items ? inquiry.items.length : 0;
-          const productsHTML = (inquiry.items || []).map(item => {
-            let designPart = '';
-            if (item.cardstock && item.cardstock.image && item.cardstock.image.src) {
-              const img = item.cardstock.image.src || '';
-              const desc = item.cardstock.image.desc || '';
-              designPart = `<div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.25rem;"><img src="${img}" alt="design" style="width:48px;height:48px;object-fit:cover;border-radius:4px;" /><div style="font-size:0.85rem;color:#666;">${desc}</div></div>`;
+        // Clear individual stat
+        function clearStat(type) {
+            if (!confirm(`Are you sure you want to clear ${type}? This action cannot be undone.`)) {
+                return;
             }
-            const itemScent = item.scent || 'No scent';
-            return `<div>• ${item.name} (${itemScent}) - $${item.price.toFixed(2)}${designPart}</div>`;
-          }).join('');
-          
-          // Find the original index in the full inquiries array
-          const allInquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-          const originalIndex = allInquiries.findIndex(inq => 
-            inq.submittedAt === inquiry.submittedAt && 
-            inq.email === inquiry.email
-          );
 
-          html += `
-            <div class="inquiry-item ${isFilled ? 'filled' : ''}">
-              <h3>${inquiry.firstName} ${inquiry.lastName}</h3>
-              <div class="inquiry-detail"><strong>Email:</strong> ${inquiry.email}</div>
-              <div class="inquiry-detail"><strong>Phone:</strong> ${inquiry.phone}</div>
-              <div class="inquiry-detail"><strong>Order Total:</strong> $${inquiry.total.toFixed(2)}</div>
-              <div class="inquiry-detail"><strong>Items:</strong> ${itemsCount}</div>
-              <div class="inquiry-detail"><strong>Date:</strong> ${date}</div>
-              ${inquiry.specialRequests ? `<div class="inquiry-detail"><strong>Special Requests:</strong> ${inquiry.specialRequests}</div>` : ''}
-              ${inquiry.filledDate ? `<div class="inquiry-detail"><strong>Filled Date:</strong> ${new Date(inquiry.filledDate).toLocaleDateString()}</div>` : ''}
-              <div class="inquiry-items">
-                <strong>Products:</strong>
-                ${productsHTML}
-              </div>
-              <div class="inquiry-actions">
-                ${!isFilled ? 
-                  `<button class="mark-filled-btn" onclick="markAsFilled(${originalIndex})">Mark as Filled</button>` : 
-                  `<button class="restore-btn" onclick="restoreToPending(${originalIndex})">Restore to Pending</button>`
+            const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                totalSales: 0,
+                totalOrders: 0,
+                itemsSold: 0
+            };
+
+            switch(type) {
+                case 'sales':
+                    stats.totalSales = 0;
+                    break;
+                case 'orders':
+                    stats.totalOrders = 0;
+                    break;
+                case 'items':
+                    stats.itemsSold = 0;
+                    break;
+            }
+
+            localStorage.setItem('adminStats', JSON.stringify(stats));
+            loadStats();
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} cleared successfully!`);
+        }
+
+        // Load orders from localStorage
+        function loadOrders() {
+            // Get inquiries from cart and convert to pending orders if not already done
+            const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
+            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
+            
+            // Migrate inquiries to pending orders
+            if (inquiries.length > 0) {
+                inquiries.forEach(inquiry => {
+                    if (!pendingOrders.find(order => order.submittedAt === inquiry.submittedAt)) {
+                        pendingOrders.push({
+                            ...inquiry,
+                            id: Date.now() + Math.random(),
+                            status: 'pending'
+                        });
+                    }
+                });
+                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
+                // Clear inquiries after migration
+                localStorage.removeItem('inquiries');
+            }
+
+            const filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
+
+            displayOrders('pending', pendingOrders);
+            displayOrders('filled', filledOrders);
+
+            // Update counts
+            document.getElementById('pending-count').textContent = pendingOrders.length;
+            document.getElementById('filled-count').textContent = filledOrders.length;
+        }
+
+        // Display orders in the appropriate tab
+        function displayOrders(type, orders) {
+            const container = document.getElementById(`${type}-orders-tab`);
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3>No ${type} orders</h3>
+                        <p>All clear! No ${type} orders at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            orders.forEach(order => {
+                const date = new Date(order.submittedAt);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                let itemsHTML = '';
+                order.items.forEach(item => {
+                    let designHTML = '';
+                    if (item.cardstock && item.cardstock.image) {
+                        designHTML = `
+                            <div class="design-preview">
+                                <img src="${item.cardstock.image.src || ''}" alt="Design">
+                                <div class="design-preview-desc">${item.cardstock.image.desc || ''}</div>
+                            </div>
+                        `;
+                    }
+
+                    itemsHTML += `
+                        <div class="item">
+                            <div>
+                                <span class="item-name">${item.name}</span>
+                                <span class="item-scent">- ${item.scent}</span>
+                                ${designHTML}
+                            </div>
+                            <span class="item-price">$${item.price.toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+
+                let specialRequestsHTML = '';
+                if (order.specialRequests && order.specialRequests.trim() !== '') {
+                    specialRequestsHTML = `
+                        <div class="special-requests">
+                            <strong>📝 Special Requests:</strong>
+                            <p>${order.specialRequests}</p>
+                        </div>
+                    `;
                 }
-                <button class="delete-btn" onclick="deleteInquiry(${originalIndex})">Delete</button>
-              </div>
-            </div>
-          `;
-        });
-        container.innerHTML = html;
-      }
-      
-      // Switch between tabs
-      function switchTab(tabName) {
-        // Update tab buttons
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        event.target.classList.add('active');
-        
-        // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById(tabName + '-tab').classList.add('active');
-      }
-      
-      // Mark inquiry as filled
-      function markAsFilled(index) {
-        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        if (inquiries[index]) {
-          inquiries[index].filled = true;
-          inquiries[index].filledDate = new Date().toISOString();
-          localStorage.setItem('inquiries', JSON.stringify(inquiries));
-          loadInquiries();
-        }
-      }
-      
-      // Restore inquiry to pending
-      function restoreToPending(index) {
-        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        if (inquiries[index]) {
-          inquiries[index].filled = false;
-          delete inquiries[index].filledDate;
-          localStorage.setItem('inquiries', JSON.stringify(inquiries));
-          loadInquiries();
-        }
-      }
-      
-      // Delete a single inquiry
-      function deleteInquiry(index) {
-        if (confirm('Are you sure you want to delete this inquiry?')) {
-          const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-          inquiries.splice(index, 1);
-          localStorage.setItem('inquiries', JSON.stringify(inquiries));
-          loadInquiries();
-        }
-      }
 
-      // Export to CSV
-      function exportToCSV() {
-        const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        if (inquiries.length === 0) {
-          alert('No inquiries to export.');
-          return;
+                const actions = type === 'pending' 
+                    ? `
+                        <button class="btn btn-mark-filled" onclick="markAsFilled('${order.id}')">
+                            ✓ Mark as Filled
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteOrder('${order.id}', 'pending')">
+                            🗑️ Delete
+                        </button>
+                    `
+                    : `
+                        <button class="btn btn-restore" onclick="restoreOrder('${order.id}')">
+                            ↩️ Restore to Pending
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteOrder('${order.id}', 'filled')">
+                            🗑️ Delete
+                        </button>
+                    `;
+
+                html += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="customer-info">
+                                <div class="customer-name">
+                                    ${order.firstName} ${order.lastName}
+                                    <span class="badge badge-${type}">${type.toUpperCase()}</span>
+                                </div>
+                                <div class="customer-details">
+                                    📧 ${order.email}<br>
+                                    📱 ${order.phone}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="order-total">$${order.total.toFixed(2)}</div>
+                                <div class="order-timestamp">${formattedDate}</div>
+                            </div>
+                        </div>
+
+                        <div class="order-items">
+                            <h4>Order Items (${order.items.length})</h4>
+                            ${itemsHTML}
+                        </div>
+
+                        ${specialRequestsHTML}
+
+                        <div class="order-actions">
+                            ${actions}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
         }
 
-        // Add an Items column that includes design info when present
-        let csv = 'First Name,Last Name,Email,Phone,Address,City,ZIP,Order Total,Items Count,Items,Date\n';
-        
-        inquiries.forEach(inquiry => {
-          const date = new Date(inquiry.submittedAt).toLocaleDateString();
-          const itemsStr = inquiry.items.map(item => {
-            const base = `${item.name} (${item.scent}) - $${item.price.toFixed(2)}`;
-            if (item.cardstock && item.cardstock.image) {
-              const id = item.cardstock.image.id || '';
-              const desc = item.cardstock.image.desc || '';
-              return `${base} [${id}: ${desc}]`;
+        // Switch between tabs
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            if (tab === 'pending') {
+                document.getElementById('pending-orders-tab').style.display = 'flex';
+                document.getElementById('filled-orders-tab').style.display = 'none';
+            } else {
+                document.getElementById('pending-orders-tab').style.display = 'none';
+                document.getElementById('filled-orders-tab').style.display = 'flex';
             }
-            return base;
-          }).join(' | ');
+        }
 
-          csv += `"${inquiry.firstName}","${inquiry.lastName}","${inquiry.email}","${inquiry.phone}","${inquiry.address}","${inquiry.city}","${inquiry.zip}","${inquiry.total.toFixed(2)}","${inquiry.items.length}","${itemsStr}","${date}"\n`;
+        // Mark order as filled
+        function markAsFilled(orderId) {
+            if (!confirm('Mark this order as filled?')) {
+                return;
+            }
+
+            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
+            let filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
+
+            const orderIndex = pendingOrders.findIndex(order => order.id == orderId);
+            if (orderIndex !== -1) {
+                const order = pendingOrders[orderIndex];
+                order.status = 'filled';
+                order.filledAt = new Date().toISOString();
+                
+                filledOrders.push(order);
+                pendingOrders.splice(orderIndex, 1);
+
+                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
+                localStorage.setItem('filledOrders', JSON.stringify(filledOrders));
+
+                updateStats();
+                loadOrders();
+                
+                alert('Order marked as filled! Statistics updated.');
+            }
+        }
+
+        // Restore order to pending
+        function restoreOrder(orderId) {
+            if (!confirm('Restore this order to pending?')) {
+                return;
+            }
+
+            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
+            let filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
+
+            const orderIndex = filledOrders.findIndex(order => order.id == orderId);
+            if (orderIndex !== -1) {
+                const order = filledOrders[orderIndex];
+                order.status = 'pending';
+                delete order.filledAt;
+                
+                pendingOrders.push(order);
+                filledOrders.splice(orderIndex, 1);
+
+                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
+                localStorage.setItem('filledOrders', JSON.stringify(filledOrders));
+
+                updateStats();
+                loadOrders();
+                
+                alert('Order restored to pending!');
+            }
+        }
+
+        // Delete order
+        function deleteOrder(orderId, type) {
+            if (!confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                return;
+            }
+
+            const storageKey = type === 'pending' ? 'pendingOrders' : 'filledOrders';
+            let orders = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+            orders = orders.filter(order => order.id != orderId);
+            localStorage.setItem(storageKey, JSON.stringify(orders));
+
+            if (type === 'filled') {
+                updateStats();
+            }
+            
+            loadOrders();
+            alert('Order deleted successfully!');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Initialize dashboard on page load
+        window.addEventListener('load', () => {
+            initDashboard();
+            updateStats();
         });
-
-        // Create download link
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'inquiries_' + new Date().toISOString().split('T')[0] + '.csv';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }
-
-      // Clear all inquiries
-      function clearAllInquiries() {
-        if (confirm('Are you sure you want to delete all inquiries? This cannot be undone.')) {
-          localStorage.removeItem('inquiries');
-          loadInquiries();
-          alert('All inquiries have been cleared.');
-        }
-      }
-
-        // Reset statistics
-        function resetStats() {
-          if (confirm('Are you sure you want to reset all statistics? This will clear all inquiry data. This cannot be undone.')) {
-            localStorage.removeItem('inquiries');
-            document.getElementById('total-inquiries').textContent = '0';
-            document.getElementById('total-revenue').textContent = '$0.00';
-            document.getElementById('avg-order-value').textContent = '$0.00';
-            document.getElementById('pending-inquiries-container').innerHTML = '<p class="empty-state">No pending inquiries.</p>';
-            document.getElementById('filled-inquiries-container').innerHTML = '<p class="empty-state">No filled orders yet.</p>';
-            document.getElementById('table-body').innerHTML = '';
-            alert('All statistics have been reset.');
-          }
-        }
-      // Initialize on page load
-      window.addEventListener('load', function() {
-        checkAuth();
-        const username = sessionStorage.getItem('adminUsername');
-        if (username) {
-          document.getElementById('admin-username').textContent = username;
-        }
-        loadInquiries();
-      });
     </script>
-    <footer>
-        <p>
-         &copy; 2025 Not Your Mama's Freshies. All rights reserved. | Designed by Kendal Purcell
-        </p>
-    </footer>
-  </body>
+</body>
 </html>
