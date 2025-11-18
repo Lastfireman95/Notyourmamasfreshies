@@ -477,6 +477,49 @@
     </div>
 
     <script>
+        // ========== SECURITY: Authentication Check ==========
+        // Check authentication before allowing access
+        function checkAuth() {
+            const adminToken = sessionStorage.getItem('adminToken');
+            const tokenTimestamp = sessionStorage.getItem('adminTokenTimestamp');
+            const adminUsername = sessionStorage.getItem('adminUsername');
+            
+            // Check if token exists and is less than 30 minutes old
+            if (!adminToken || !tokenTimestamp || !adminUsername) {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            const tokenAge = Date.now() - parseInt(tokenTimestamp);
+            const thirtyMinutes = 30 * 60 * 1000; // 30 minutes in milliseconds
+            
+            if (tokenAge > thirtyMinutes) {
+                sessionStorage.removeItem('adminToken');
+                sessionStorage.removeItem('adminTokenTimestamp');
+                sessionStorage.removeItem('adminUsername');
+                alert('Session expired. Please login again.');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Run authentication check immediately
+        if (!checkAuth()) {
+            document.body.innerHTML = '<div style="text-align:center;padding:3rem;color:#e74c3c;"><h2>⛔ Unauthorized Access</h2><p>Redirecting to login...</p></div>';
+            throw new Error('Unauthorized access');
+        }
+
+        // ========== SECURITY: Input Sanitization ==========
+        // Prevent XSS attacks by sanitizing user input
+        function sanitizeHTML(input) {
+            if (!input) return '';
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML;
+        }
+
         // Initialize dashboard data
         function initDashboard() {
             loadStats();
@@ -640,7 +683,7 @@
                     specialRequestsHTML = `
                         <div class="special-requests">
                             <strong>📝 Special Requests:</strong>
-                            <p>${order.specialRequests}</p>
+                            <p>${sanitizeHTML(order.specialRequests)}</p>
                         </div>
                     `;
                 }
@@ -668,12 +711,12 @@
                         <div class="order-header">
                             <div class="customer-info">
                                 <div class="customer-name">
-                                    ${order.firstName} ${order.lastName}
+                                    ${sanitizeHTML(order.firstName)} ${sanitizeHTML(order.lastName)}
                                     <span class="badge badge-${type}">${type.toUpperCase()}</span>
                                 </div>
                                 <div class="customer-details">
-                                    📧 ${order.email}<br>
-                                    📱 ${order.phone}
+                                    📧 ${sanitizeHTML(order.email)}<br>
+                                    📱 ${sanitizeHTML(order.phone)}
                                 </div>
                             </div>
                             <div>

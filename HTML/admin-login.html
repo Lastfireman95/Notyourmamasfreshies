@@ -148,21 +148,79 @@
       const ADMIN_USERNAME = 'CarolinePurcell';
       const ADMIN_PASSWORD = 'Mustang/75';
 
+      // Track failed login attempts
+      let loginAttempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
+      let lockoutTime = parseInt(sessionStorage.getItem('lockoutTime') || '0');
+
+      // Check if account is locked out
+      function checkLockout() {
+        if (lockoutTime > 0 && Date.now() < lockoutTime) {
+          const remainingMinutes = Math.ceil((lockoutTime - Date.now()) / 60000);
+          document.getElementById('error-message').textContent = 
+            `Too many failed attempts. Please try again in ${remainingMinutes} minute(s).`;
+          document.getElementById('error-message').style.display = 'block';
+          document.querySelector('.login-btn').disabled = true;
+          return true;
+        } else if (lockoutTime > 0 && Date.now() >= lockoutTime) {
+          // Lockout expired, reset
+          sessionStorage.removeItem('loginAttempts');
+          sessionStorage.removeItem('lockoutTime');
+          loginAttempts = 0;
+          lockoutTime = 0;
+          document.querySelector('.login-btn').disabled = false;
+        }
+        return false;
+      }
+
+      // Check on page load
+      checkLockout();
+
       document.getElementById('login-form').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Check lockout before proceeding
+        if (checkLockout()) {
+          return;
+        }
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const errorMessage = document.getElementById('error-message');
 
         if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-          // Set session token
-          sessionStorage.setItem('adminLoggedIn', 'true');
+          // Generate secure session token with timestamp
+          const token = btoa(JSON.stringify({
+            username: username,
+            timestamp: Date.now(),
+            random: Math.random().toString(36)
+          }));
+          
+          // Set session data
+          sessionStorage.setItem('adminToken', token);
+          sessionStorage.setItem('adminTokenTimestamp', Date.now().toString());
           sessionStorage.setItem('adminUsername', username);
+          
+          // Clear login attempts on successful login
+          sessionStorage.removeItem('loginAttempts');
+          sessionStorage.removeItem('lockoutTime');
+          
           // Redirect to admin dashboard
           window.location.href = 'admin-dashboard.html';
         } else {
-          errorMessage.textContent = 'Invalid username or password.';
+          // Increment failed attempts
+          loginAttempts++;
+          sessionStorage.setItem('loginAttempts', loginAttempts.toString());
+          
+          // Lock account after 5 failed attempts
+          if (loginAttempts >= 5) {
+            lockoutTime = Date.now() + (15 * 60 * 1000); // 15 minutes lockout
+            sessionStorage.setItem('lockoutTime', lockoutTime.toString());
+            errorMessage.textContent = 'Too many failed attempts. Account locked for 15 minutes.';
+            document.querySelector('.login-btn').disabled = true;
+          } else {
+            errorMessage.textContent = `Invalid username or password. (${loginAttempts}/5 attempts)`;
+          }
+          
           errorMessage.style.display = 'block';
           document.getElementById('password').value = '';
         }
