@@ -9,8 +9,8 @@ const firebaseConfig = {
   projectId:  "notyourmamasfreshies",
   storageBucket: "notyourmamasfreshies.firebasestorage.app",
   messagingSenderId: "282135423700",
-  appId: "1:282135423700:web:2b47fb049b6cb858386941"
-  measurementId: ""G-KPZJTQ4Y9J""
+  appId: "1:282135423700:web:2b47fb049b6cb858386941",
+  measurementId: "G-KPZJTQ4Y9J"
 };
 
 // Initialize Firebase
