@@ -362,10 +362,14 @@
         // Log the inquiry (in a real app, this would send to a server)
         console.log('Inquiry Submitted:', formData);
 
-        // Save to localStorage for demonstration
-        let inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-        inquiries.push(formData);
-        localStorage.setItem('inquiries', JSON.stringify(inquiries));
+        // Save directly to pendingOrders for admin dashboard
+        let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
+        pendingOrders.push({
+          ...formData,
+          id: Date.now() + Math.random(),
+          status: 'pending'
+        });
+        localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
 
         // Show success message
         alert(`Thank you for your inquiry, ${formData.firstName}!\n\nWe will contact you at ${formData.phone} or ${formData.email} within 3 business days to schedule your pickup.\n\nOrder Total: $${formData.total.toFixed(2)}`);
