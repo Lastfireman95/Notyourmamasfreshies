@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Not Your Mama's Freshies</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -594,36 +600,27 @@
             alert(`${type.charAt(0).toUpperCase() + type.slice(1)} cleared successfully!`);
         }
 
-        // Load orders from localStorage
+        // Load orders from Firebase
         function loadOrders() {
-            // Get inquiries from cart and convert to pending orders if not already done
-            const inquiries = JSON.parse(localStorage.getItem('inquiries')) || [];
-            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
-            
-            // Migrate inquiries to pending orders
-            if (inquiries.length > 0) {
-                inquiries.forEach(inquiry => {
-                    if (!pendingOrders.find(order => order.submittedAt === inquiry.submittedAt)) {
-                        pendingOrders.push({
-                            ...inquiry,
-                            id: Date.now() + Math.random(),
-                            status: 'pending'
-                        });
-                    }
+            // Load pending orders from Firebase
+            window.firebaseDB.ref('pendingOrders').on('value', (snapshot) => {
+                const pendingOrders = [];
+                snapshot.forEach((childSnapshot) => {
+                    pendingOrders.push(childSnapshot.val());
                 });
-                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
-                // Clear inquiries after migration
-                localStorage.removeItem('inquiries');
-            }
+                displayOrders('pending', pendingOrders);
+                document.getElementById('pending-count').textContent = pendingOrders.length;
+            });
 
-            const filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
-
-            displayOrders('pending', pendingOrders);
-            displayOrders('filled', filledOrders);
-
-            // Update counts
-            document.getElementById('pending-count').textContent = pendingOrders.length;
-            document.getElementById('filled-count').textContent = filledOrders.length;
+            // Load filled orders from Firebase
+            window.firebaseDB.ref('filledOrders').on('value', (snapshot) => {
+                const filledOrders = [];
+                snapshot.forEach((childSnapshot) => {
+                    filledOrders.push(childSnapshot.val());
+                });
+                displayOrders('filled', filledOrders);
+                document.getElementById('filled-count').textContent = filledOrders.length;
+            });
         }
 
         // Display orders in the appropriate tab
@@ -766,26 +763,21 @@
                 return;
             }
 
-            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
-            let filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
-
-            const orderIndex = pendingOrders.findIndex(order => order.id == orderId);
-            if (orderIndex !== -1) {
-                const order = pendingOrders[orderIndex];
-                order.status = 'filled';
-                order.filledAt = new Date().toISOString();
-                
-                filledOrders.push(order);
-                pendingOrders.splice(orderIndex, 1);
-
-                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
-                localStorage.setItem('filledOrders', JSON.stringify(filledOrders));
-
-                updateStats();
-                loadOrders();
-                
-                alert('Order marked as filled! Statistics updated.');
-            }
+            // Get order from Firebase
+            window.firebaseDB.ref('pendingOrders/' + orderId).once('value', (snapshot) => {
+                const order = snapshot.val();
+                if (order) {
+                    order.status = 'filled';
+                    order.filledAt = new Date().toISOString();
+                    
+                    // Move to filled orders
+                    window.firebaseDB.ref('filledOrders/' + orderId).set(order);
+                    window.firebaseDB.ref('pendingOrders/' + orderId).remove();
+                    
+                    updateStats();
+                    alert('Order marked as filled! Statistics updated.');
+                }
+            });
         }
 
         // Restore order to pending
@@ -794,26 +786,21 @@
                 return;
             }
 
-            let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
-            let filledOrders = JSON.parse(localStorage.getItem('filledOrders')) || [];
-
-            const orderIndex = filledOrders.findIndex(order => order.id == orderId);
-            if (orderIndex !== -1) {
-                const order = filledOrders[orderIndex];
-                order.status = 'pending';
-                delete order.filledAt;
-                
-                pendingOrders.push(order);
-                filledOrders.splice(orderIndex, 1);
-
-                localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
-                localStorage.setItem('filledOrders', JSON.stringify(filledOrders));
-
-                updateStats();
-                loadOrders();
-                
-                alert('Order restored to pending!');
-            }
+            // Get order from Firebase
+            window.firebaseDB.ref('filledOrders/' + orderId).once('value', (snapshot) => {
+                const order = snapshot.val();
+                if (order) {
+                    order.status = 'pending';
+                    delete order.filledAt;
+                    
+                    // Move back to pending orders
+                    window.firebaseDB.ref('pendingOrders/' + orderId).set(order);
+                    window.firebaseDB.ref('filledOrders/' + orderId).remove();
+                    
+                    updateStats();
+                    alert('Order restored to pending!');
+                }
+            });
         }
 
         // Delete order
@@ -822,18 +809,18 @@
                 return;
             }
 
-            const storageKey = type === 'pending' ? 'pendingOrders' : 'filledOrders';
-            let orders = JSON.parse(localStorage.getItem(storageKey)) || [];
-
-            orders = orders.filter(order => order.id != orderId);
-            localStorage.setItem(storageKey, JSON.stringify(orders));
-
-            if (type === 'filled') {
-                updateStats();
-            }
-            
-            loadOrders();
-            alert('Order deleted successfully!');
+            const dbPath = type === 'pending' ? 'pendingOrders' : 'filledOrders';
+            window.firebaseDB.ref(dbPath + '/' + orderId).remove()
+                .then(() => {
+                    if (type === 'filled') {
+                        updateStats();
+                    }
+                    alert('Order deleted successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error deleting order:', error);
+                    alert('Error deleting order. Please try again.');
+                });
         }
 
         // Logout function

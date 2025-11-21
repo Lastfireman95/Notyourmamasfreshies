@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Not Your Mama's Freshies — Shopping Cart</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    
     <style>
       * {
         margin: 0;
@@ -362,17 +368,28 @@
         // Log the inquiry (in a real app, this would send to a server)
         console.log('Inquiry Submitted:', formData);
 
-        // Save directly to pendingOrders for admin dashboard
-        let pendingOrders = JSON.parse(localStorage.getItem('pendingOrders')) || [];
-        pendingOrders.push({
+        // Save to Firebase Realtime Database
+        const orderRef = window.firebaseDB.ref('pendingOrders').push();
+        const orderId = orderRef.key;
+        
+        orderRef.set({
           ...formData,
-          id: Date.now() + Math.random(),
+          id: orderId,
           status: 'pending'
-        });
-        localStorage.setItem('pendingOrders', JSON.stringify(pendingOrders));
+        }).then(() => {
+          console.log('Order saved to Firebase');
+          
+          // Show success message
+          alert(`Thank you for your inquiry, ${formData.firstName}!\n\nWe will contact you at ${formData.phone} or ${formData.email} within 3 business days to schedule your pickup.\n\nOrder Total: $${formData.total.toFixed(2)}`);
 
-        // Show success message
-        alert(`Thank you for your inquiry, ${formData.firstName}!\n\nWe will contact you at ${formData.phone} or ${formData.email} within 3 business days to schedule your pickup.\n\nOrder Total: $${formData.total.toFixed(2)}`);
+          // Clear cart and form
+          localStorage.removeItem('cart');
+          document.getElementById('inquiry-form').reset();
+          initCart();
+        }).catch((error) => {
+          console.error('Error saving to Firebase:', error);
+          alert('There was an error submitting your order. Please try again.');
+        });
 
         // Clear cart and form
         localStorage.removeItem('cart');
