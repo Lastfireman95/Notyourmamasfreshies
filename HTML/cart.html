@@ -390,11 +390,6 @@
           console.error('Error saving to Firebase:', error);
           alert('There was an error submitting your order. Please try again.');
         });
-
-        // Clear cart and form
-        localStorage.removeItem('cart');
-        document.getElementById('inquiry-form').reset();
-        initCart();
       }
 
       // Attach form submission
