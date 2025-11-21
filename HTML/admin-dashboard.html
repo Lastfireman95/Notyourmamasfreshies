@@ -85,6 +85,10 @@
             height: 100%;
         }
 
+        .stat-card.pending-orders::before {
+            background: #e67e22;
+        }
+
         .stat-card.sales::before {
             background: #3498db;
         }
@@ -431,6 +435,14 @@
 
         <!-- Statistics Section -->
         <div class="stats-grid">
+            <div class="stat-card pending-orders">
+                <div class="stat-label">Pending Orders</div>
+                <div class="stat-value"><span id="pending-orders-stat">0</span></div>
+                <div class="stat-actions">
+                    <button class="clear-stats-btn" onclick="clearStat('pending')">Clear Pending</button>
+                </div>
+            </div>
+
             <div class="stat-card sales">
                 <div class="stat-label">Total Sales</div>
                 <div class="stat-value">$<span id="total-sales">0.00</span></div>
@@ -535,11 +547,13 @@
         // Load statistics from localStorage
         function loadStats() {
             const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                pendingOrders: 0,
                 totalSales: 0,
                 totalOrders: 0,
                 itemsSold: 0
             };
 
+            document.getElementById('pending-orders-stat').textContent = stats.pendingOrders;
             document.getElementById('total-sales').textContent = stats.totalSales.toFixed(2);
             document.getElementById('total-orders').textContent = stats.totalOrders;
             document.getElementById('items-sold').textContent = stats.itemsSold;
@@ -553,6 +567,7 @@
             let totalSales = 0;
             let totalOrders = 0;
             let itemsSold = 0;
+            let pendingOrdersCount = pendingOrders.length;
 
             // Calculate from filled orders only
             filledOrders.forEach(order => {
@@ -562,6 +577,7 @@
             });
 
             const stats = {
+                pendingOrders: pendingOrdersCount,
                 totalSales,
                 totalOrders,
                 itemsSold
@@ -573,11 +589,23 @@
 
         // Clear individual stat
         function clearStat(type) {
+            if (type === 'pending') {
+                if (!confirm('Are you sure you want to clear all pending orders? This will delete all pending orders.')) {
+                    return;
+                }
+                localStorage.setItem('pendingOrders', JSON.stringify([]));
+                updateStats();
+                loadOrders();
+                alert('All pending orders have been cleared!');
+                return;
+            }
+
             if (!confirm(`Are you sure you want to clear ${type}? This action cannot be undone.`)) {
                 return;
             }
 
             const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                pendingOrders: 0,
                 totalSales: 0,
                 totalOrders: 0,
                 itemsSold: 0
@@ -610,6 +638,17 @@
                 });
                 displayOrders('pending', pendingOrders);
                 document.getElementById('pending-count').textContent = pendingOrders.length;
+                
+                // Update pending orders stat
+                const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                    pendingOrders: 0,
+                    totalSales: 0,
+                    totalOrders: 0,
+                    itemsSold: 0
+                };
+                stats.pendingOrders = pendingOrders.length;
+                localStorage.setItem('adminStats', JSON.stringify(stats));
+                loadStats();
             });
 
             // Load filled orders from Firebase
@@ -620,6 +659,31 @@
                 });
                 displayOrders('filled', filledOrders);
                 document.getElementById('filled-count').textContent = filledOrders.length;
+                
+                // Update stats based on filled orders
+                let totalSales = 0;
+                let totalOrders = 0;
+                let itemsSold = 0;
+                
+                filledOrders.forEach(order => {
+                    totalSales += order.total || 0;
+                    totalOrders += 1;
+                    itemsSold += order.items ? order.items.length : 0;
+                });
+                
+                const stats = JSON.parse(localStorage.getItem('adminStats')) || {
+                    pendingOrders: 0,
+                    totalSales: 0,
+                    totalOrders: 0,
+                    itemsSold: 0
+                };
+                
+                stats.totalSales = totalSales;
+                stats.totalOrders = totalOrders;
+                stats.itemsSold = itemsSold;
+                
+                localStorage.setItem('adminStats', JSON.stringify(stats));
+                loadStats();
             });
         }
 
