@@ -642,7 +642,7 @@
         if (window.firebaseDB) {
           window.firebaseDB.ref('products').on('value', (snapshot) => {
             const arr = [];
-            snapshot.forEach(child => arr.push({ id: child.key, ...child.val() }));
+            snapshot.forEach(child => { arr.push({ id: child.key, ...child.val() }); });
             products = arr;
             tryRender();
           }, (error) => {
@@ -652,7 +652,7 @@
           });
           window.firebaseDB.ref('scents').on('value', (snapshot) => {
             const arr = [];
-            snapshot.forEach(child => arr.push(child.val().name));
+            snapshot.forEach(child => { arr.push(child.val().name); });
             scents = arr;
             tryRender();
           }, (error) => {

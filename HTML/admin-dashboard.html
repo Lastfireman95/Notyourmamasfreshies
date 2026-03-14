@@ -1270,7 +1270,7 @@
         function loadProducts() {
             window.firebaseDB.ref('products').on('value', (snapshot) => {
                 const products = [];
-                snapshot.forEach(child => products.push({ id: child.key, ...child.val() }));
+                snapshot.forEach(child => { products.push({ id: child.key, ...child.val() }); });
                 renderProductsAdmin(products);
             }, (error) => {
                 console.error('Firebase products permission error:', error);
@@ -1428,7 +1428,7 @@
         function loadScents() {
             window.firebaseDB.ref('scents').on('value', (snapshot) => {
                 const scents = [];
-                snapshot.forEach(child => scents.push({ id: child.key, name: child.val().name }));
+                snapshot.forEach(child => { scents.push({ id: child.key, name: child.val().name }); });
                 renderScents(scents);
             }, (error) => {
                 console.error('Firebase scents permission error:', error);
