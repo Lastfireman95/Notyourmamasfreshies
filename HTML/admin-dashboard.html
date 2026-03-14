@@ -572,6 +572,46 @@
         .btn-save { background: #27ae60; color: white; }
         .btn-save:hover { background: #229954; }
 
+        .btn-add-offline { margin-left: auto; }
+
+        /* ========== OFFLINE ORDER MODAL ========== */
+        #offline-order-modal .modal-box { max-width: 580px; }
+        .order-items-form { display: flex; flex-direction: column; gap: 0.75rem; }
+        .order-item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto auto;
+            gap: 0.5rem;
+            align-items: end;
+            background: #f8f9fa;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+        .order-item-row .item-field label { display: block; font-size: 0.8rem; font-weight: bold; color: #555; margin-bottom: 0.25rem; }
+        .order-item-row input { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; }
+        .order-item-row input:focus { outline: none; border-color: sandybrown; }
+        .btn-remove-item { background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 0.5rem 0.7rem; cursor: pointer; font-size: 0.9rem; align-self: flex-end; white-space: nowrap; }
+        .btn-remove-item:hover { background: #c0392b; }
+        .btn-add-item { background: #3498db; color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+        .btn-add-item:hover { background: #2980b9; }
+        .offline-order-total { font-weight: bold; color: #27ae60; font-size: 1.1rem; text-align: right; margin-top: 0.25rem; }
+        .modal-form-group input[type="email"],
+        .modal-form-group input[type="tel"],
+        .modal-form-group input[type="datetime-local"],
+        .modal-form-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .modal-form-group input[type="email"]:focus,
+        .modal-form-group input[type="tel"]:focus,
+        .modal-form-group input[type="datetime-local"]:focus,
+        .modal-form-group textarea:focus { outline: none; border-color: sandybrown; box-shadow: 0 0 4px rgba(210,105,30,0.3); }
+        .modal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
         /* ========== SCENTS ========== */
         .scents-add-form { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .scents-add-form input[type="text"] {
@@ -667,6 +707,7 @@
                     <button class="tab-btn" onclick="switchTab('filled')">
                         Filled Orders <span class="badge badge-filled" id="filled-count">0</span>
                     </button>
+                    <button class="btn btn-add btn-add-offline" onclick="showOfflineOrderModal()" title="Manually add an offline or in-person order to Filled Orders">+ Add Offline Order</button>
                 </div>
             </div>
 
@@ -741,6 +782,53 @@
             <div class="modal-actions">
                 <button class="btn btn-cancel" onclick="closeProductModal()">Cancel</button>
                 <button class="btn btn-save" id="save-product-btn" onclick="saveProduct()">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offline Order Modal -->
+    <div id="offline-order-modal" class="modal-overlay" onclick="handleOfflineModalOverlayClick(event)">
+        <div class="modal-box">
+            <h2>Add Offline Order</h2>
+            <form id="offline-order-form" onsubmit="return false;">
+                <div class="modal-form-row">
+                    <div class="modal-form-group">
+                        <label for="offline-first-name">First Name *</label>
+                        <input type="text" id="offline-first-name" placeholder="e.g. Jane" required>
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="offline-last-name">Last Name *</label>
+                        <input type="text" id="offline-last-name" placeholder="e.g. Smith" required>
+                    </div>
+                </div>
+                <div class="modal-form-row">
+                    <div class="modal-form-group">
+                        <label for="offline-email">Email</label>
+                        <input type="email" id="offline-email" placeholder="e.g. jane@example.com">
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="offline-phone">Phone</label>
+                        <input type="tel" id="offline-phone" placeholder="e.g. 555-1234">
+                    </div>
+                </div>
+                <div class="modal-form-group">
+                    <label for="offline-order-date">Order Date *</label>
+                    <input type="datetime-local" id="offline-order-date" required>
+                </div>
+                <div class="modal-form-group">
+                    <label>Items *</label>
+                    <div id="offline-items-container" class="order-items-form"></div>
+                    <button type="button" class="btn-add-item" onclick="addOfflineItem()" style="margin-top:0.5rem;">+ Add Item</button>
+                </div>
+                <div class="offline-order-total">Total: $<span id="offline-order-total-display">0.00</span></div>
+                <div class="modal-form-group" style="margin-top:0.75rem;">
+                    <label for="offline-special-requests">Special Requests</label>
+                    <textarea id="offline-special-requests" rows="2" placeholder="Any special notes..."></textarea>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeOfflineOrderModal()">Cancel</button>
+                <button class="btn btn-save" id="save-offline-order-btn" onclick="saveOfflineOrder()">Save Order</button>
             </div>
         </div>
     </div>
@@ -1073,12 +1161,13 @@
         }
 
         // Switch between tabs
-        function switchTab(tab) {
+        function switchTab(tab, btnEl) {
             // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            const activeBtn = btnEl || event.target;
+            if (activeBtn) activeBtn.classList.add('active');
 
             // Update tab content
             if (tab === 'pending') {
@@ -1401,6 +1490,138 @@
                 if (e.key === 'Enter') { e.preventDefault(); addScent(); }
             });
         });
+
+        // ========== OFFLINE ORDER MANAGEMENT ==========
+        function showOfflineOrderModal() {
+            // Default date/time to now (local)
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const localISO = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+            document.getElementById('offline-order-date').value = localISO;
+            // Clear form
+            document.getElementById('offline-order-form').reset();
+            document.getElementById('offline-order-date').value = localISO;
+            document.getElementById('offline-items-container').innerHTML = '';
+            document.getElementById('offline-order-total-display').textContent = '0.00';
+            // Add one blank item row to start
+            addOfflineItem();
+            document.getElementById('offline-order-modal').classList.add('open');
+        }
+
+        function closeOfflineOrderModal() {
+            document.getElementById('offline-order-modal').classList.remove('open');
+        }
+
+        function handleOfflineModalOverlayClick(event) {
+            if (event.target === document.getElementById('offline-order-modal')) {
+                closeOfflineOrderModal();
+            }
+        }
+
+        function addOfflineItem() {
+            const container = document.getElementById('offline-items-container');
+            const idx = container.children.length;
+            const row = document.createElement('div');
+            row.className = 'order-item-row';
+            row.dataset.idx = idx;
+            row.innerHTML = `
+                <div class="item-field">
+                    <label>Product Name *</label>
+                    <input type="text" class="offline-item-name" placeholder="e.g. Small Rounds" oninput="recalcOfflineTotal()" required>
+                </div>
+                <div class="item-field">
+                    <label>Scent</label>
+                    <input type="text" class="offline-item-scent" placeholder="e.g. Vanilla Bean" oninput="recalcOfflineTotal()">
+                </div>
+                <div class="item-field" style="min-width:90px;">
+                    <label>Price ($) *</label>
+                    <input type="number" class="offline-item-price" min="0" step="0.01" placeholder="0.00" oninput="recalcOfflineTotal()" required>
+                </div>
+                <button type="button" class="btn-remove-item" onclick="removeOfflineItem(this)" title="Remove item">✕</button>
+            `;
+            container.appendChild(row);
+            recalcOfflineTotal();
+        }
+
+        function removeOfflineItem(btn) {
+            const container = document.getElementById('offline-items-container');
+            if (container.children.length <= 1) {
+                alert('At least one item is required. Add another item before removing this one.');
+                return;
+            }
+            btn.closest('.order-item-row').remove();
+            recalcOfflineTotal();
+        }
+
+        function recalcOfflineTotal() {
+            const prices = Array.from(document.querySelectorAll('.offline-item-price'))
+                .map(input => parseFloat(input.value) || 0);
+            const total = prices.reduce((sum, p) => sum + p, 0);
+            document.getElementById('offline-order-total-display').textContent = total.toFixed(2);
+        }
+
+        async function saveOfflineOrder() {
+            const firstName = document.getElementById('offline-first-name').value.trim();
+            const lastName = document.getElementById('offline-last-name').value.trim();
+            const email = document.getElementById('offline-email').value.trim();
+            const phone = document.getElementById('offline-phone').value.trim();
+            const orderDate = document.getElementById('offline-order-date').value;
+            const specialRequests = document.getElementById('offline-special-requests').value.trim();
+
+            if (!firstName || !lastName) { alert('Please enter the customer\'s first and last name.'); return; }
+            if (!orderDate) { alert('Please select an order date.'); return; }
+
+            // Collect items
+            const itemRows = document.querySelectorAll('#offline-items-container .order-item-row');
+            const items = [];
+            for (const row of itemRows) {
+                const name = row.querySelector('.offline-item-name').value.trim();
+                const scent = row.querySelector('.offline-item-scent').value.trim();
+                const price = parseFloat(row.querySelector('.offline-item-price').value);
+                if (!name) { alert('Please enter a product name for each item.'); return; }
+                if (isNaN(price) || price < 0) { alert('Please enter a valid price for each item.'); return; }
+                items.push({ name, scent: scent || '—', price });
+            }
+            if (items.length === 0) { alert('Please add at least one item.'); return; }
+
+            const total = items.reduce((sum, item) => sum + item.price, 0);
+            const submittedAt = new Date(orderDate).toISOString();
+            const filledAt = new Date().toISOString();
+
+            const saveBtn = document.getElementById('save-offline-order-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                const orderRef = window.firebaseDB.ref('filledOrders').push();
+                const orderId = orderRef.key;
+                await orderRef.set({
+                    id: orderId,
+                    firstName,
+                    lastName,
+                    email: email || '—',
+                    phone: phone || '—',
+                    specialRequests,
+                    items,
+                    total,
+                    submittedAt,
+                    filledAt,
+                    status: 'filled',
+                    source: 'offline'
+                });
+                updateStats();
+                closeOfflineOrderModal();
+                // Switch to filled tab so admin can see the new order
+                switchTab('filled', document.querySelector('.tab-btn[onclick*="filled"]'));
+                alert('Offline order saved to Filled Orders!');
+            } catch (error) {
+                console.error('Error saving offline order:', error);
+                alert('Error saving order. Please try again.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Order';
+            }
+        }
     </script>
 </body>
 </html>

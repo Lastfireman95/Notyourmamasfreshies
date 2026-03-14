@@ -49,7 +49,7 @@ const firebaseConfig = {
 
 1. Go back to "Realtime Database" in Firebase Console
 2. Click on the "Rules" tab
-3. Replace the rules with:
+3. Replace the rules with the contents of `database.rules.json` (included in this repository):
 
 ```json
 {
@@ -73,6 +73,10 @@ const firebaseConfig = {
   }
 }
 ```
+
+4. Click **"Publish"** to save the rules.
+
+**Important:** The `products` and `scents` rules are required for the admin dashboard to manage products and scents. Without them, you will receive a permission-denied error when trying to add, edit, or delete products or scents from the admin page.
 
 **Note:** These rules allow anyone to read/write. For production, you should add authentication.
 
@@ -128,6 +132,7 @@ For better security, you can restrict admin dashboard access:
 
 The following files have been updated with Firebase integration:
 - `/firebase-config.js` - Firebase configuration (YOU NEED TO UPDATE THIS)
+- `/database.rules.json` - Firebase Realtime Database security rules (apply these in Firebase Console)
 - `/HTML/cart.html` - Saves orders to Firebase
 - `/HTML/admin-dashboard.html` - Reads orders from Firebase
 
