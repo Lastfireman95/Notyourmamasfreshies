@@ -1303,11 +1303,13 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         let w = img.width, h = img.height;
-                        const MAX = 800;
-                        if (w > MAX) { h = (h * MAX) / w; w = MAX; }
-                        if (h > MAX) { w = (w * MAX) / h; h = MAX; }
+                        // Cap at 800px on either side to keep base64 size reasonable (~50-80KB)
+                        const MAX_DIM = 800;
+                        if (w > MAX_DIM) { h = (h * MAX_DIM) / w; w = MAX_DIM; }
+                        if (h > MAX_DIM) { w = (w * MAX_DIM) / h; h = MAX_DIM; }
                         canvas.width = w; canvas.height = h;
                         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        // 0.75 quality gives a good balance between image clarity and file size
                         resolve(canvas.toDataURL('image/jpeg', 0.75));
                     };
                     img.onerror = reject;

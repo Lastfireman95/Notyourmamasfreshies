@@ -550,6 +550,15 @@
         return div.innerHTML;
       }
 
+      // Allow only relative paths and safe data URIs (base64 images) as product image sources
+      function isSafeImageUrl(url) {
+        if (!url) return false;
+        if (url.startsWith('../') || url.startsWith('./')) return true;
+        if (/^data:image\/(jpeg|png|gif|webp);base64,/.test(url)) return true;
+        if (/^https?:\/\//.test(url)) return true;
+        return false;
+      }
+
       function buildScentOptions(scents) {
         return '<option value="">Choose a scent...</option>' +
           scents.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
@@ -588,7 +597,7 @@
         let html = '';
         activeProducts.forEach((product, idx) => {
           const pid = 'dyn-' + idx;
-          const imgHtml = product.imageUrl
+          const imgHtml = product.imageUrl && isSafeImageUrl(product.imageUrl)
             ? `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}">`
             : '<div class="product-image-no-img">🛍️</div>';
           const cardstockHtml = product.hasCardstock ? buildCardstockHtml(pid) : '';
