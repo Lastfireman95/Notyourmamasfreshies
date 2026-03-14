@@ -61,12 +61,22 @@ const firebaseConfig = {
     "filledOrders": {
       ".read": true,
       ".write": true
+    },
+    "products": {
+      ".read": true,
+      ".write": true
+    },
+    "scents": {
+      ".read": true,
+      ".write": true
     }
   }
 }
 ```
 
 **Note:** These rules allow anyone to read/write. For production, you should add authentication.
+
+> ⚠️ **Important:** Without the `products` and `scents` rules above, the admin cannot add, edit, or delete products/scents, and the sales page will not display any products or scents from the database.
 
 ### 6. (Optional) Add Admin Authentication
 
