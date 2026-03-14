@@ -61,12 +61,31 @@ const firebaseConfig = {
     "filledOrders": {
       ".read": true,
       ".write": true
+    },
+    "products": {
+      ".read": true,
+      ".write": true
+    },
+    "scents": {
+      ".read": true,
+      ".write": true
     }
   }
 }
 ```
 
+These rules are also saved in `database.rules.json` and can be deployed using the Firebase CLI:
+
+```bash
+firebase deploy --only database
+```
+
 **Note:** These rules allow anyone to read/write. For production, you should add authentication.
+
+- `pendingOrders` — stores orders submitted from the website cart
+- `filledOrders` — stores completed orders, including offline/in-person orders added via the admin dashboard
+- `products` — stores the product catalog managed in the admin dashboard
+- `scents` — stores available scent options managed in the admin dashboard
 
 ### 6. (Optional) Add Admin Authentication
 
