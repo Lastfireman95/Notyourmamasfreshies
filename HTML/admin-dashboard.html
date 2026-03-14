@@ -1183,6 +1183,10 @@
                 const products = [];
                 snapshot.forEach(child => products.push({ id: child.key, ...child.val() }));
                 renderProductsAdmin(products);
+            }, (error) => {
+                console.error('Firebase products permission error:', error);
+                const container = document.getElementById('products-admin-grid');
+                container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#e74c3c;padding:2rem;">⚠️ Cannot load products. Please update your Firebase database rules to include read/write access for the <strong>products</strong> path. See FIREBASE_SETUP.md for instructions.</p>';
             });
         }
 
@@ -1337,6 +1341,10 @@
                 const scents = [];
                 snapshot.forEach(child => scents.push({ id: child.key, name: child.val().name }));
                 renderScents(scents);
+            }, (error) => {
+                console.error('Firebase scents permission error:', error);
+                const container = document.getElementById('scents-list');
+                container.innerHTML = '<p style="color:#e74c3c;text-align:center;padding:1rem;">⚠️ Cannot load scents. Please update your Firebase database rules to include read/write access for the <strong>scents</strong> path. See FIREBASE_SETUP.md for instructions.</p>';
             });
         }
 

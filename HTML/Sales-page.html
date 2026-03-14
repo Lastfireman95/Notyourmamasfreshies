@@ -645,11 +645,19 @@
             snapshot.forEach(child => arr.push({ id: child.key, ...child.val() }));
             products = arr;
             tryRender();
+          }, (error) => {
+            console.error('Firebase products read error:', error);
+            products = [];
+            tryRender();
           });
           window.firebaseDB.ref('scents').on('value', (snapshot) => {
             const arr = [];
             snapshot.forEach(child => arr.push(child.val().name));
             scents = arr;
+            tryRender();
+          }, (error) => {
+            console.error('Firebase scents read error:', error);
+            scents = [];
             tryRender();
           });
         } else {
