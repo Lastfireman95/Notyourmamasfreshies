@@ -629,12 +629,13 @@
       function loadProductsAndScents() {
         let products = null;
         let scents = null;
+        let scentsLoadedFromFirebase = false;
 
         function tryRender() {
           if (products !== null && scents !== null) {
             renderProducts(
               products.length > 0 ? products : DEFAULT_PRODUCTS,
-              scents.length > 0 ? scents : DEFAULT_SCENTS
+              scentsLoadedFromFirebase ? scents : DEFAULT_SCENTS
             );
           }
         }
@@ -654,6 +655,7 @@
             const arr = [];
             snapshot.forEach(child => { arr.push(child.val().name); });
             scents = arr;
+            scentsLoadedFromFirebase = true;
             tryRender();
           }, (error) => {
             console.error('Firebase scents read error:', error);
