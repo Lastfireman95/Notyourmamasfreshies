@@ -132,6 +132,32 @@
         object-fit: cover;
         object-position: center 20%;
       }
+      .product-image-dynamic {
+        width: 100%;
+        height: 200px;
+        background-color: #f0e6d2;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .product-image-dynamic img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .product-image-no-img {
+        font-size: 4rem;
+        color: #ccc;
+      }
+      .loading-products {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        font-size: 1.1rem;
+      }
       .product-name {
         font-size: 1.2rem;
         font-weight: bold;
@@ -309,6 +335,10 @@
         color: #333;
       }
     </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
   </head>
   <body>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -321,335 +351,10 @@
     </div>
 
     <h1>Shop Our Freshies</h1>
-    <!--Small Rounds-->
-    <div class="products-grid">
-      <div class="product-card">
-        <div class="product-image1"><img src="../Resources/Images/Small Round.jpg" alt="Small Round"></div>
-        <div class="product-name">Small Rounds</div>
-        <div class="product-price">$7.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-1">Select Scent:</label>
-            <select name="scent" id="scent-1">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="cardstock-1">Choose Cardstock Design:</label>
-            <div class="custom-select">
-              <select name="cardstock" id="cardstock-1">
-                <option value="none" data-img="" data-desc="None - No cardstock">None - No cardstock</option>
-                <option value="design1" data-img="../Resources/Images/Baby its cold CS.jpg" data-desc="Christmas- Baby it's cold outside">Christmas- Baby it's cold outside</option>
-                <option value="design2" data-img="../Resources/Images/Believe CS.jpg" data-desc="Christmas- Believe">Christmas- Believe</option>
-                <option value="design3" data-img="../Resources/Images/Bra CS.jpg" data-desc="Christmas- Friends are like Bras">Christmas- Friends are like Bras</option>
-                <option value="design4" data-img="../Resources/Images/Christmas Magic CS.jpg" data-desc="Believe in the Magic of Christmas">Believe in the Magic of Christmas</option>
-                <option value="design5" data-img="../Resources/Images/Christmas Tree CS.jpg" data-desc="Christmas Tree">Christmas Tree</option>
-                <option value="design6" data-img="../Resources/Images/Grinchmas CS.jpg" data-desc="Grinchmas">Grinchmas</option>
-                <option value="design7" data-img="../Resources/Images/Holly Jolly CS.jpg" data-desc="Holly Jolly">Holly Jolly</option>
-                <option value="design8" data-img="../Resources/Images/Joy to World CS.jpg" data-desc="Joy to the World">Joy to the World</option>
-                <option value="design9" data-img="../Resources/Images/Santa Cam CS.jpg" data-desc="Santa Cam">Santa Cam</option>
-              </select>
-            </div>
-          </div>
-          <button type="button" onclick="addToCart('Small Rounds', 7.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Behind Every Bad B**ch is a Car Seat -->
-      <div class="product-card">
-        <div class="product-image2"><img src="../Resources/Images/Behind every.jpg" alt="Behind every"></div>
-        <div class="product-name">Behind Every Bad B**ch is a Car Seat</div>
-        <div class="product-price">$13.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-3">Select Scent:</label>
-            <select name="scent" id="scent-3">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Behind Every Bad B**ch is a Car Seat', 13.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Winter Cow -->
-      <div class="product-card">
-        <div class="product-image3"><img src="../Resources/Images/Highland Cow.jpg" alt="Winter Cow"></div>
-        <div class="product-name">Winter Cow</div>
-        <div class="product-price">$13.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-4">Select Scent:</label>
-            <select name="scent" id="scent-4">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Winter Cow', 13.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Tree Cake -->
-      <div class="product-card">
-        <div class="product-image5"><img src="../Resources/Images/Tree Cake.jpg" alt="Tree Cake"></div>
-        <div class="product-name">Tree Cake</div>
-        <div class="product-price">$7.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-6">Select Scent:</label>
-            <select name="scent" id="scent-6">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Tree Cake', 7.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Coffee Cup -->
-      <div class="product-card">
-        <div class="product-image6"><img src="../Resources/Images/Coffee Freshie.jpg" alt="Coffee Cup"></div>
-        <div class="product-name">Coffee Cup</div>
-        <div class="product-price">$10.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-7">Select Scent:</label>
-            <select name="scent" id="scent-7">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Coffee Cup', 10.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- But Did You Die? -->
-      <div class="product-card">
-        <div class="product-image5"><img src="../Resources/Images/But Did You Die.jpg" alt="But Did You Die?"></div>
-        <div class="product-name">But Did You Die?</div>
-        <div class="product-price">$10.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-6">Select Scent:</label>
-            <select name="scent" id="scent-6">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('But Did You Die?', 10.00, this)">Add to Cart</button>
-        </form>
-      </div>      
-
-      <!-- Grinch -->
-      <div class="product-card">
-        <div class="product-image8"><img src="../Resources/Images/Grinch.jpg" alt="Grinch"></div>
-        <div class="product-name">Grinch</div>
-        <div class="product-price">$13.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-9">Select Scent:</label>
-            <select name="scent" id="scent-9">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Grinch', 13.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- 12 Gauge -->
-      <div class="product-card">
-        <div class="product-image9"><img src="../Resources/Images/12 Gauge.jpg" alt="12 Gauge"></div>
-        <div class="product-name">12 Gauge</div>
-        <div class="product-price">$5.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-10">Select Scent:</label>
-            <select name="scent" id="scent-10">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('12 Gauge', 5.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Deer in Crosshairs -->
-      <div class="product-card">
-        <div class="product-image10"><img src="../Resources/Images/Deer in Crosshair.jpg" alt="Deer in Crosshairs"></div>
-        <div class="product-name">Deer in Crosshairs</div>
-        <div class="product-price">$15.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-11">Select Scent:</label>
-            <select name="scent" id="scent-11">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Deer in Crosshairs', 15.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Christmas Tree Jeep -->
-      <div class="product-card">
-        <div class="product-image11"><img src="../Resources/Images/Christmas Tree Jeep.jpg" alt="Christmas Tree Jeep"></div>
-        <div class="product-name">Christmas Tree Jeep</div>
-        <div class="product-price">$10.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-12">Select Scent:</label>
-            <select name="scent" id="scent-12">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Christmas Tree Jeep', 10.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Stocking Hippo -->
-      <div class="product-card">
-        <div class="product-image12"><img src="../Resources/Images/Hippo Stocking.jpg" alt="Stocking Hippo"></div>
-        <div class="product-name">Stocking Hippo</div>
-        <div class="product-price">$5.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-13">Select Scent:</label>
-            <select name="scent" id="scent-13">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Stocking Hippo', 5.00, this)">Add to Cart</button>
-        </form>
-      </div>
-
-      <!-- Pencil -->
-      <div class="product-card">
-        <div class="product-image13"><img src="../Resources/Images/Pencil.jpg" alt="Pencil"></div>
-        <div class="product-name">Pencil</div>
-        <div class="product-price">$5.00</div>
-        <form class="product-form">
-          <div class="form-group">
-            <label for="scent-14">Select Scent:</label>
-            <select name="scent" id="scent-14">
-              <option value="">Choose a scent...</option>
-              <option value="Narcissist">Narcissist</option>
-              <option value="Diva">Diva</option>
-              <option value="Vanilla Bean">Vanilla Bean</option>
-              <option value="Pumpkin Spice">Pumpkin Spice</option>
-              <option value="Cinnamon Roll">Cinnamon Roll</option>
-              <option value="Black Ice">Black Ice</option>
-              <option value="Snickerdoodle">Snickerdoodle</option>
-              <option value="Tis the Season">Tis the Season</option>
-              <option value="Peppermint Twist">Peppermint Twist</option>
-              <option value="Apple Cinnamon">Apple Cinnamon</option>
-            </select>
-          </div>
-          <button type="button" onclick="addToCart('Pencil', 5.00, this)">Add to Cart</button>
-        </form>
-      </div>
+    <!--Products loaded dynamically from Firebase-->
+    <div id="products-grid" class="products-grid">
+      <div class="loading-products">Loading products...</div>
+    </div>
 
     <script>
       // Add to cart requires choosing a predefined Cardstock design for applicable products
@@ -699,9 +404,6 @@
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         document.getElementById('cart-count').textContent = cart.length;
       }
-
-      // Update cart count on page load
-      window.addEventListener('load', updateCartCount);
 
       // Initialize custom dropdowns with thumbnails
       function initCustomSelects() {
@@ -807,10 +509,152 @@
       document.addEventListener('click', function() {
         closeAllSelect(null);
       });
-      
+
+      // ===== FIREBASE PRODUCT & SCENT LOADING =====
+      const CARDSTOCK_DESIGNS = [
+        { value: 'none', img: '', desc: 'None - No cardstock' },
+        { value: 'design1', img: '../Resources/Images/Baby its cold CS.jpg', desc: "Christmas- Baby it's cold outside" },
+        { value: 'design2', img: '../Resources/Images/Believe CS.jpg', desc: 'Christmas- Believe' },
+        { value: 'design3', img: '../Resources/Images/Bra CS.jpg', desc: 'Christmas- Friends are like Bras' },
+        { value: 'design4', img: '../Resources/Images/Christmas Magic CS.jpg', desc: 'Believe in the Magic of Christmas' },
+        { value: 'design5', img: '../Resources/Images/Christmas Tree CS.jpg', desc: 'Christmas Tree' },
+        { value: 'design6', img: '../Resources/Images/Grinchmas CS.jpg', desc: 'Grinchmas' },
+        { value: 'design7', img: '../Resources/Images/Holly Jolly CS.jpg', desc: 'Holly Jolly' },
+        { value: 'design8', img: '../Resources/Images/Joy to World CS.jpg', desc: 'Joy to the World' },
+        { value: 'design9', img: '../Resources/Images/Santa Cam CS.jpg', desc: 'Santa Cam' },
+      ];
+
+      const DEFAULT_PRODUCTS = [
+        { id: 'd1', name: 'Small Rounds', price: 7.00, imageUrl: '../Resources/Images/Small Round.jpg', hasCardstock: true, active: true },
+        { id: 'd2', name: 'Behind Every Bad B**ch is a Car Seat', price: 13.00, imageUrl: '../Resources/Images/Behind every.jpg', hasCardstock: false, active: true },
+        { id: 'd3', name: 'Winter Cow', price: 13.00, imageUrl: '../Resources/Images/Highland Cow.jpg', hasCardstock: false, active: true },
+        { id: 'd4', name: 'Tree Cake', price: 7.00, imageUrl: '../Resources/Images/Tree Cake.jpg', hasCardstock: false, active: true },
+        { id: 'd5', name: 'Coffee Cup', price: 10.00, imageUrl: '../Resources/Images/Coffee Freshie.jpg', hasCardstock: false, active: true },
+        { id: 'd6', name: 'But Did You Die?', price: 10.00, imageUrl: '../Resources/Images/But Did You Die.jpg', hasCardstock: false, active: true },
+        { id: 'd7', name: 'Grinch', price: 13.00, imageUrl: '../Resources/Images/Grinch.jpg', hasCardstock: false, active: true },
+        { id: 'd8', name: '12 Gauge', price: 5.00, imageUrl: '../Resources/Images/12 Gauge.jpg', hasCardstock: false, active: true },
+        { id: 'd9', name: 'Deer in Crosshairs', price: 15.00, imageUrl: '../Resources/Images/Deer in Crosshair.jpg', hasCardstock: false, active: true },
+        { id: 'd10', name: 'Christmas Tree Jeep', price: 10.00, imageUrl: '../Resources/Images/Christmas Tree Jeep.jpg', hasCardstock: false, active: true },
+        { id: 'd11', name: 'Stocking Hippo', price: 5.00, imageUrl: '../Resources/Images/Hippo Stocking.jpg', hasCardstock: false, active: true },
+        { id: 'd12', name: 'Pencil', price: 5.00, imageUrl: '../Resources/Images/Pencil.jpg', hasCardstock: false, active: true },
+      ];
+
+      const DEFAULT_SCENTS = [
+        'Narcissist', 'Diva', 'Vanilla Bean', 'Pumpkin Spice', 'Cinnamon Roll',
+        'Black Ice', 'Snickerdoodle', 'Tis the Season', 'Peppermint Twist', 'Apple Cinnamon'
+      ];
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function buildScentOptions(scents) {
+        return '<option value="">Choose a scent...</option>' +
+          scents.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+      }
+
+      function buildCardstockHtml(pid) {
+        const options = CARDSTOCK_DESIGNS.map(d =>
+          `<option value="${d.value}" data-img="${d.img}" data-desc="${escapeHtml(d.desc)}">${escapeHtml(d.desc)}</option>`
+        ).join('');
+        return `
+          <div class="form-group">
+            <label>Choose Cardstock Design:</label>
+            <div class="custom-select">
+              <select name="cardstock" id="cardstock-${pid}">${options}</select>
+            </div>
+          </div>`;
+      }
+
+      // Helper to safely get product name from data attribute for addToCart
+      function addToCartDynamic(btn) {
+        const name = btn.getAttribute('data-name');
+        const price = parseFloat(btn.getAttribute('data-price'));
+        addToCart(name, price, btn);
+      }
+
+      function renderProducts(products, scents) {
+        const grid = document.getElementById('products-grid');
+        const activeProducts = products.filter(p => p.active !== false);
+
+        if (activeProducts.length === 0) {
+          grid.innerHTML = '<div class="loading-products" style="color:#333;">No products available at this time. Check back soon!</div>';
+          return;
+        }
+
+        const scentOptionsHtml = buildScentOptions(scents);
+        let html = '';
+        activeProducts.forEach((product, idx) => {
+          const pid = 'dyn-' + idx;
+          const imgHtml = product.imageUrl
+            ? `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}">`
+            : '<div class="product-image-no-img">🛍️</div>';
+          const cardstockHtml = product.hasCardstock ? buildCardstockHtml(pid) : '';
+
+          html += `
+            <div class="product-card">
+              <div class="product-image-dynamic">${imgHtml}</div>
+              <div class="product-name">${escapeHtml(product.name)}</div>
+              <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+              <form class="product-form">
+                <div class="form-group">
+                  <label for="scent-${pid}">Select Scent:</label>
+                  <select name="scent" id="scent-${pid}">${scentOptionsHtml}</select>
+                </div>
+                ${cardstockHtml}
+                <button type="button"
+                  data-name="${escapeHtml(product.name)}"
+                  data-price="${parseFloat(product.price)}"
+                  onclick="addToCartDynamic(this)">Add to Cart</button>
+              </form>
+            </div>`;
+        });
+
+        grid.innerHTML = html;
+        // Re-initialize custom dropdowns for cardstock after rendering
+        initCustomSelects();
+      }
+
+      function loadProductsAndScents() {
+        let products = null;
+        let scents = null;
+
+        function tryRender() {
+          if (products !== null && scents !== null) {
+            renderProducts(
+              products.length > 0 ? products : DEFAULT_PRODUCTS,
+              scents.length > 0 ? scents : DEFAULT_SCENTS
+            );
+          }
+        }
+
+        if (window.firebaseDB) {
+          window.firebaseDB.ref('products').on('value', (snapshot) => {
+            const arr = [];
+            snapshot.forEach(child => arr.push({ id: child.key, ...child.val() }));
+            products = arr;
+            tryRender();
+          });
+          window.firebaseDB.ref('scents').on('value', (snapshot) => {
+            const arr = [];
+            snapshot.forEach(child => arr.push(child.val().name));
+            scents = arr;
+            tryRender();
+          });
+        } else {
+          // Firebase unavailable, use defaults
+          products = DEFAULT_PRODUCTS;
+          scents = DEFAULT_SCENTS;
+          tryRender();
+        }
+      }
+
       // Initialize on page load
       window.addEventListener('load', function() {
-        initCustomSelects();
+        updateCartCount();
+        loadProductsAndScents();
       });
     </script>
     <footer>
