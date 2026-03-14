@@ -877,6 +877,12 @@
             return div.innerHTML;
         }
 
+        // Default scents (mirrors the fallback list on the Sales page)
+        const DEFAULT_SCENTS = [
+            'Narcissist', 'Diva', 'Vanilla Bean', 'Pumpkin Spice', 'Cinnamon Roll',
+            'Black Ice', 'Snickerdoodle', 'Tis the Season', 'Peppermint Twist', 'Apple Cinnamon'
+        ];
+
         // Initialize dashboard data
         function initDashboard() {
             loadStats();
@@ -1441,7 +1447,8 @@
         function renderScents(scents) {
             const container = document.getElementById('scents-list');
             if (scents.length === 0) {
-                container.innerHTML = '<p style="color:#95a5a6;text-align:center;padding:1rem;">No scents added yet. Add your first scent above.</p>';
+                container.innerHTML = '<p style="color:#95a5a6;text-align:center;padding:1rem;">No scents added yet. Add your first scent above.</p>' +
+                    '<div style="text-align:center;margin-top:0.5rem;"><button class="btn btn-add" onclick="loadDefaultScents()" aria-label="Load 10 predefined scent options into the system">Load Default Scents</button></div>';
                 return;
             }
             container.innerHTML = scents.map(s => `
@@ -1449,6 +1456,16 @@
                     <span>${sanitizeHTML(s.name)}</span>
                     <button class="scent-tag-remove" onclick="deleteScent('${s.id}')" title="Remove scent">✕</button>
                 </div>`).join('');
+        }
+
+        function loadDefaultScents() {
+            const updates = {};
+            DEFAULT_SCENTS.forEach(name => {
+                const newKey = window.firebaseDB.ref('scents').push().key;
+                updates[newKey] = { name };
+            });
+            window.firebaseDB.ref('scents').update(updates)
+                .catch(err => { console.error('Error loading default scents:', err); alert('Error loading default scents. Please try again.'); });
         }
 
         function addScent() {
